@@ -27,7 +27,6 @@ RUN mkdir -p /app/app
 RUN mkdir -p /app/config
 RUN mkdir -p /app/app/rskcore
 RUN mkdir -p /app/app/templates
-RUN mkdir -p /app/init_data
 
 # setting workdir
 WORKDIR /app
