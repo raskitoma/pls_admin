@@ -38,12 +38,19 @@ PLS_PRICE_API_KEY = app.config['PLS_PRICE_API_KEY']
 # get price from provider
 def get_price(uri, api_key):
     headers = {'X-CMC_PRO_API_KEY': api_key}
-    response = requests.get(uri, headers=headers)
-    data = json.loads(response.text)
+    try:
+        response = requests.get(uri, headers=headers)
+        data = json.loads(response.text)
+    except Exception as e:
+        log2store = f"{get_time()} | Error getting data from price API: {str(e)}"
+        prRed(f'{get_time()} | {log2store}')
+        price_usd = pls_price.get_last().priceUSD
+        return price_usd
     try:
         price_usd = float(data['data']['11145']['quote']['USD']['price'])
     except Exception as e:
         log2store = f"{get_time()} | Error getting price from API: {str(e)}"
+        prRed(f'{get_time()} | {log2store}')
         price_usd = pls_price.get_last().priceUSD
     return price_usd
 
