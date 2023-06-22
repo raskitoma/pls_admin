@@ -27,6 +27,7 @@ RUN mkdir -p /app/app
 RUN mkdir -p /app/config
 RUN mkdir -p /app/app/rskcore
 RUN mkdir -p /app/app/templates
+RUN mkdir -p /app/scheduler
 
 # setting workdir
 WORKDIR /app
@@ -40,6 +41,7 @@ RUN pip3 install -r requirements.txt
 COPY *.py /app/
 COPY app /app/app
 COPY config /app/config
+COPY scheduler /app/scheduler
 
 # Exposing main port
 EXPOSE 5000
