@@ -140,34 +140,33 @@ def validator_update():
                         prGreen(f'\n{get_time()} | {log2store}')
                         w_index = int(withdrawal['index'])
                         # lets check if this withdrawal is already in the db
-                        if pls_validator_withdrawals.get_by_index(w_index) is not None:
-                            continue
-                        w_validatorIndex = int(withdrawal['validatorIndex'])
-                        w_blockNumber = i
-                        w_amount = float(withdrawal['amount'])
-                        w_miner = block_data.miner
-                        w_timestamp = datetime.datetime.fromtimestamp(int(block_data.timestamp))
-                        w_address = wallet.address
-                        w_price = price_usd
-                        new_withdrawal_data = pls_validator_withdrawals(
-                            index = w_index,
-                            validatorIndex = w_validatorIndex,
-                            blockNumber = w_blockNumber,
-                            amount = w_amount,
-                            miner = w_miner,
-                            timeStamp = w_timestamp,
-                            address = w_address,
-                            priceUSD = w_price
-                        )
-                        db.session.add(new_withdrawal_data)
-                        try:
-                            db.session.commit()
-                            log2store = f'Withdrawal found: {w_index} | {w_validatorIndex} | Stored into DB!'
-                            prGreen(f'{get_time()} | {log2store}')
-                            wallet_processed_qty += 1
-                        except Exception as e:
-                            log2store = f"{get_time()} | Error storing withdrawal in db: {str(e)}"
-                            prRed(f'{get_time()} | SCHEDULER ==> {log2store}')                        
+                        if pls_validator_withdrawals.get_one_by_index(w_index) is None:
+                            w_validatorIndex = int(withdrawal['validatorIndex'])
+                            w_blockNumber = i
+                            w_amount = float(withdrawal['amount'])
+                            w_miner = block_data.miner
+                            w_timestamp = datetime.datetime.fromtimestamp(int(block_data.timestamp))
+                            w_address = wallet.address
+                            w_price = price_usd
+                            new_withdrawal_data = pls_validator_withdrawals(
+                                index = w_index,
+                                validatorIndex = w_validatorIndex,
+                                blockNumber = w_blockNumber,
+                                amount = w_amount,
+                                miner = w_miner,
+                                timeStamp = w_timestamp,
+                                address = w_address,
+                                priceUSD = w_price
+                            )
+                            db.session.add(new_withdrawal_data)
+                            try:
+                                db.session.commit()
+                                log2store = f'Withdrawal found: {w_index} | {w_validatorIndex} | Stored into DB!'
+                                prGreen(f'{get_time()} | {log2store}')
+                                wallet_processed_qty += 1
+                            except Exception as e:
+                                log2store = f"{get_time()} | Error storing withdrawal in db: {str(e)}"
+                                prRed(f'{get_time()} | SCHEDULER ==> {log2store}')                        
     # once all are reviewed, update last block managed
     try:
         pls_block_explorer.new_block(block_current)
