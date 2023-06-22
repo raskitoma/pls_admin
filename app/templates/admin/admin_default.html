@@ -1,0 +1,17 @@
+{% extends 'admin/base.html' %}
+{% import 'admin/admin_head.html' as nav_brand with context %}
+{% block brand %}{{ nav_brand }}{% endblock brand %}
+{% block access_control %}
+  {% if current_user.is_authenticated %}
+  <div class="dropdown show">
+    <button class="btn btn-secondary dropdown-toggle" href="#" type="button" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="bi bi-person-circle"></i> {{ current_user.username }}
+    </button>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <a class="btn" href="{{ url_for('admin.logout_view') }}">Log out</a>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}
+

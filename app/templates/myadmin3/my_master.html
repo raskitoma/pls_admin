@@ -1,0 +1,79 @@
+{% extends 'flask-admin/base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="/assets/css/admin-fix.css">
+{% endblock %}
+
+{% block brand %}
+  <a href="{{ url_for('admin.index') }}" class="brand-link">
+    <img src="{{ site_logo | safe }}" alt="{{ site_name }}" class="brand-image img-circle elevation-3 bg-white" style="opacity: .8">
+    <span class="brand-text font-weight-light">{{ site_name }}</span>
+  </a>
+{% endblock %}
+
+{% block nav_control %}
+  <ul class="navbar-nav">
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="#" class="nav-link">{% if admin_view.category %}{{ admin_view.category }} - {% endif %}{{ admin_view.name }} - {{ admin_view.admin.name }}</a>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block user_panel %}
+  {% if current_user.is_authenticated %}
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex text-white">
+      <div class="image">
+        <h3><i class="fas fa-user-circle" alt="{{ current_user.email }}"></i></h3>
+      </div>
+      <div class="info">
+          <span class="d-block">
+            {{ current_user.fullname }}
+          </span>
+          <span class="d-block text-sm">  
+            {{ current_user.email }}
+          </span>
+          <span class="d-block">  
+            <a href="{{ url_for('admin.logout_view') }}" class="text-sm text-secondary">Logout</a>
+          </span>        
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+
+{% block access_control %}
+  {% if current_user.is_authenticated %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="dropdown show mr-2">
+          <a class="btn btn-light border-indigo dropdown-toggle" href="#" type="button" role="button" id="ddMessages" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-comments"></i>&nbsp;{{ messages|length }}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="ddMessages">
+            {% for category, message in messages %}
+              <a class="dropdown-item text-{{ category }}" href="#">{{ message }}</a><br>
+            {% endfor %}          
+          </div>
+        </div>
+
+      {% endif %}
+    {% endwith %}
+    <div class="dropdown show">
+      <a class="btn btn-secondary dropdown-toggle" href="#" type="button" role="button" id="ddUserExtras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="bi bi-person-circle"></i> {{ current_user.email }}
+      </a>   
+      <div class="dropdown-menu" aria-labelledby="ddUserExtras">
+        <a class="btn" href="{{ url_for('admin.logout_view') }}"><i class="fas fa-sign-out-alt"></i>&nbsp;Log out</a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <div class="float-right d-none d-sm-inline">
+        Version 1.0.0
+    </div>
+    {{ site_footer | safe }}
+{% endblock footer %}
+{% block tail %}
+<script src="/assets/js/fixadmin.js"></script>
+{% endblock tail %}

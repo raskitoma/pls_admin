@@ -1,0 +1,20 @@
+body{
+    background: gainsboro;
+    overflow: hidden;
+}
+
+.box {
+  position: absolute;
+  margin: auto;
+  top: calc(100vh - 256px) !important;
+  left: calc(100vw - 356px) !important;
+  display: block;
+  height: 512px;
+  width: 512px;
+  background: none;
+}
+
+.box i {
+    color:rgba(0, 0, 0, 0.05);
+    font-size: 512px;
+}

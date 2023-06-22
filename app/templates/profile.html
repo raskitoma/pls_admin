@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}	
+{% include ('dt_header.html') %}
+
+<body id="page-top" style="background-image: url('/assets/img/soccerfield.jpg'); height: 100vh;background-position:center right;">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+
+                {% include ('site_navbar.html') %}
+
+                <div class="container-fluid">
+                    <h3 class="text-white mb-4">Perfil</h3>
+                    <div class="row mb-6">
+                        <div class="col-sm-3 d-flex">
+                            <div class="card shadow mb-3 flex-fill">
+                                <div class="card-body">
+                                    <div class="my-auto mx-auto">
+                                        <div id="profileImage" class="shadow bg-warning bg-gradient rounded-circle mx-auto text-white"></div>
+                                        <br>
+                                        <h5 class="text-center"><i class="bi bi-person-circle"></i>&nbsp;{{ user_data.fullname  }}</h5>
+                                        <p class="text-center"><i class="bi bi-envelope-check"></i>&nbsp;{{ user_data.email }}<br>
+                                        <p class="text-center"><i class="bi bi-telephone-fill"></i>&nbsp;{{ user_data.phone }}<br>
+                                            <span class="small">Usuario desde {{ user_since }}</span></p>
+                                        <hr>
+                                        <div id="serviceImage" class="shadow mx-auto"><img src="/assets/img/fnflogo.png" class="img-fluid mx-auto d-block p-3"></div>
+                                        <div class="alert alert-danger m-0">
+                                            <p>Tiene consultas o necesita ayuda? Escriba un correo a <a href="mailto:{{ app_config.app_supp }}">soporte</a>.</p>
+                                        </div>
+                
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    {%
+                        if user_quinelas > 0 
+                    %}
+                        <div class="col-md-6 col-xl-6 mb-6 d-flex">
+                            <div class="card shadow mb-4 flex-fill">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">Detalle de mejor pronóstico <a href="/proreview?quinela={{ quinela_best.id }}">#{{ '%06d' % quinela_best.tarjeta }}</a>: {{ quinela_best.total_points }} puntos.</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="small fw-bold"><a class="text-dark stretched-link text-decoration-none" data-bs-toggle="collapse" href="#ss1" role="button" aria-expanded="false" aria-controls="ss1">Etapa 1</a><span class="float-end">{{ quinela_best['s1'] }}</span></h4>
+                                                    <div class="progress progress-sm mb-3">
+                                                        {%
+                                                            set my_progress = quinela_best['s1']|int / 164 * 100
+                                                        %}
+                                                        <div class="progress-bar  progress-bar-striped bg-danger" aria-valuenow="{{ quinela_best['s1'] }}" aria-valuemin="0" aria-valuemax="164" style="width: {{ my_progress }}%;">
+                                                            <span class="visually-hidden">{{ quinela_best['s1'] }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapse multi-collapse" id="ss1">
+                                                        <div class="card card-body mb-4 border-0">
+                                                            <table>
+                                                                <tr>
+                                                                    <td style="width: 20px;">
+                                                                        <i class="bi bi-arrow-return-right"></i>&nbsp;
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5 class="small fw-bold">&nbsp;Partidos<span class="float-end">{{ quinela_best['s11'] }}</span></h5>
+                                                                        <div class="progress progress-sm mb-3">
+                                                                            {%
+                                                                                set my_progress = quinela_best['s11']|int / 48 * 100
+                                                                            %}
+                                                                            <div class="progress-bar bg-danger" aria-valuenow="{{ quinela_best['s11'] }}" aria-valuemin="0" aria-valuemax="48" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s11'] }}</span></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width: 20px;">
+                                                                        <i class="bi bi-arrow-return-right"></i>&nbsp;
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5 class="small fw-bold">&nbsp;Grupos<span class="float-end">{{ quinela_best['s12'] }}</span></h5>
+                                                                        <div class="progress progress-sm mb-3">
+                                                                            {%
+                                                                                set my_progress = quinela_best['s12']|int / 64 * 100
+                                                                            %}
+                                                                            <div class="progress-bar bg-danger" aria-valuenow="{{ quinela_best['s12'] }}" aria-valuemin="0" aria-valuemax="64" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s12'] }}</span></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width: 20px;">
+                                                                        <i class="bi bi-arrow-return-right"></i>&nbsp;
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5 class="small fw-bold">&nbsp;Pronóstico Final<span class="float-end">{{ quinela_best['s13'] }}</span></h5>
+                                                                        <div class="progress progress-sm mb-3">
+                                                                            {%
+                                                                                set my_progress = quinela_best['s13']|int / 52 * 100
+                                                                            %}
+                                                                            <div class="progress-bar bg-danger" aria-valuenow="{{ quinela_best['s13'] }}" aria-valuemin="0" aria-valuemax="52" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s13'] }}</span></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                </div>
+                                            </div>
+
+                                            </div>
+                                        </div> 
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="small fw-bold">Etapa 2<span class="float-end">{{ quinela_best['s2'] }}</span></h4>
+                                                    <div class="progress progress-sm mb-3">
+                                                        {%
+                                                            set my_progress = quinela_best['s2']|int / 16 * 100
+                                                        %}
+                                                        <div class="progress-bar bg-warning progress-bar-striped" aria-valuenow="{{ quinela_best['s2'] }}" aria-valuemin="0" aria-valuemax="16" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s2'] }}</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="small fw-bold">Etapa 3<span class="float-end">{{ quinela_best['s3'] }}</span></h4>
+                                                    <div class="progress progress-sm mb-3">
+                                                        {%
+                                                            set my_progress = quinela_best['s3']|int / 20 * 100
+                                                        %}
+                                                        <div class="progress-bar bg-primary progress-bar-striped" aria-valuenow="{{ quinela_best['s3'] }}" aria-valuemin="0" aria-valuemax="20" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s3'] }}</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="small fw-bold">Etapa 4<span class="float-end">{{ quinela_best['s4'] }}</span></h4>
+                                                    <div class="progress progress-sm mb-3">
+                                                        {%
+                                                            set my_progress = quinela_best['s4']|int / 14 * 100
+                                                        %}
+                                                        <div class="progress-bar bg-info progress-bar-striped" aria-valuenow="{{ quinela_best['s4'] }}" aria-valuemin="0" aria-valuemax="14" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s4'] }}</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h4 class="small fw-bold"><a class="text-dark stretched-link text-decoration-none" data-bs-toggle="collapse" href="#ss2" role="button" aria-expanded="false" aria-controls="ss2">Etapa 5</a><span class="float-end">{{ quinela_best['s5'] }}</span></h4>
+                                                    <div class="progress progress-sm mb-3">
+                                                        {%
+                                                            set my_progress = quinela_best['s5']|int / 36 * 100
+                                                        %}
+                                                        <div class="progress-bar bg-success progress-bar-striped" aria-valuenow="{{ quinela_best['s5'] }}" aria-valuemin="0" aria-valuemax="36" style="width: {{ my_progress }}%;">
+                                                            <span class="visually-hidden">{{ quinela_best['s5'] }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapse multi-collapse" id="ss2">
+                                                        <div class="card card-body mb-4 border-0">
+                                                            <table>
+                                                                <tr>
+                                                                    <td style="width: 20px;">
+                                                                        <i class="bi bi-arrow-return-right"></i>&nbsp;
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5 class="small fw-bold">&nbsp;Partidos Final<span class="float-end">{{ quinela_best['s51'] }}</span></h5>
+                                                                        <div class="progress progress-sm mb-3">
+                                                                            {%
+                                                                                set my_progress = quinela_best['s51']|int / 20 * 100
+                                                                            %}
+                                                                            <div class="progress-bar bg-success" aria-valuenow="{{ quinela_best['s51'] }}" aria-valuemin="0" aria-valuemax="20" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s51'] }}</span></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="width: 20px;">
+                                                                        <i class="bi bi-arrow-return-right"></i></i>&nbsp;
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5 class="small fw-bold">&nbsp;Posiciones Finales<span class="float-end">{{ quinela_best['s52'] }}</span></h5>
+                                                                        <div class="progress progress-sm mb-3">
+                                                                            {%
+                                                                                set my_progress = quinela_best['s52']|int / 16 * 100
+                                                                            %}
+                                                                            <div class="progress-bar bg-success" aria-valuenow="{{ quinela_best['s52'] }}" aria-valuemin="0" aria-valuemax="16" style="width: {{ my_progress }}%;"><span class="visually-hidden">{{ quinela_best['s52'] }}</span></div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-md-6 col-xl-6 mb-6 d-flex">
+                            <div class="card shadow mb-4 flex-fill">
+                                <div class="card-header py-3">
+                                    <h6 class="text-primary fw-bold m-0">Detalles</h6>
+                                </div>
+                                <div class="card-body">
+                                    <h4>Usuario no cuenta con Tarjetas o Pronósticos ingresados.</h4>
+                                    <br>
+                                    <hr>
+                                    <h5>Canjear una tarjeta <a href="/canje">aquí</a>.</h5>
+                                    <br>
+                                    <hr>
+                                    <p>Cualquier novedad o inquietud, contactar a <a href="mailto:{{ app_config.app_supp }}">soporte</a>.</p>    
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    </div>
+                    {%
+                        if user_quinelas > 0 
+                    %}
+                    <div class="row mb-3">
+                        <div class="col-md-6 col-xl-6 mb-6 mx-auto">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <p class="text-primary m-0 fw-bold">Mis {{ app_config.app_quin }}s</p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive small">
+                                        <table id="quinelas_table" class="table table-light thead-dark table-striped table-bordered table-hover table-sm shadow">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>{{ app_config.app_quin }} #</th>
+                                                    <th>Total</th>
+                                                    <th>E-1</th>
+                                                    <th>E-2</th>
+                                                    <th>E-3</th>
+                                                    <th>E-4</th>
+                                                    <th>E-5</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>  
+                    {% endif %}
+                </div>
+            </div>
+
+            {% include ('site_footer.html') %}
+
+        </div>
+        {% include ('site_upper.html') %}
+    </div>
+    {% include ('site_scripts.html') %}
+    <script>
+        $(document).ready(function(){
+            var profileImage = $('#profileImage').text( "{{ initials}}" );
+        })
+    </script>
+    {% if user_quinelas > 0 %}
+        {% include ('dt_footer.html') %}
+        <script>
+            var table_data = {{ quinela_list | tojson | safe}};
+            $(document).ready( function () {
+                $('#quinelas_table').DataTable({
+                    data: table_data,
+                    autoWidth: true,
+                    responsive: true,
+                    language: {
+                        "decimal":        "",
+                        "emptyTable":     "No hay información",
+                        "info":           "Mostrando _START_ a _END_ de _TOTAL_ {{ app_config.app_quin }}s",
+                        "infoEmpty":      "Mostrando 0 a 0 de 0 {{ app_config.app_quin }}s",
+                        "infoFiltered":   "(filtrado de _MAX_ {{ app_config.app_quin }}s totales)",
+                        "infoPostFix":    "",
+                        "thousands":      ",",
+                        "lengthMenu":     "Mostrando _MENU_ {{ app_config.app_quin }}s",
+                        "loadingRecords": "Cargando...",
+                        "processing":     "",
+                        "search":         "Buscar:",
+                        "zeroRecords":    "No se encontraron {{ app_config.app_quin }}s",
+                        "paginate": {
+                            "first":      "Primera",
+                            "last":       "Ultima",
+                            "next":       "Siguiente",
+                            "previous":   "Previa"
+                        },
+                        "aria": {
+                            "sortAscending":  ": activar para ordenar la columna ascendente",
+                            "sortDescending": ": activar para ordenar la columna descendente"
+                        }
+                    },                    columns: [
+                        { data: "quinela_text", className: "text-center" },
+                        { data: "total_points", render: function(datum, type, row){
+                            my_points = row.total_points
+                            my_progress = parseInt(my_points/250*100);
+                            return '<div class="progress progress-sm"><div class="progress-bar bg-success progress-bar-striped" aria-valuenow="'+ my_points + '" aria-valuemin="0" aria-valuemax="250" style="width: ' + my_progress +  '%;"><span>' + my_points  + '</span></div></div>';
+                        }, className: "text-center" },
+                        { data: "s1", className: "text-center" },
+                        { data: "s2", className: "text-center" },
+                        { data: "s3", className: "text-center" },
+                        { data: "s4", className: "text-center" },
+                        { data: "s5", className: "text-center" },
+                   ],
+                   "searching": false,
+                    "order": [[ 2, "desc" ]],
+                    "pageLength": 10,
+                    "lengthMenu": [ 10, 25, 50, 75, 100 ],
+                });
+
+                $('#quinelas_table').on('click', 'tr', function () {
+                    var data = $('#quinelas_table').DataTable().row( this ).data();
+                    window.location.href = "/pronosticos?quinela=" + data.id;
+                });
+
+            } );
+        </script>
+    {% endif %}    
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+{% extends 'admin/model/list.html' %}
+{% import 'myadmin3/admin_docs_list_actions.html' as admin_docs_list_actions with context %}
+{% block body %}
+<div class="content-header">
+  <div class="container-fluid">
+      <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">{{ admin_view.category }} - {{ admin_view.name }}</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item">{{ admin_view.category }} - {{ admin_view.name }}</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>    
+<section class="content">
+  <div class="container-fluid">
+    {{ super() }}
+  </div>  
+</section>
+{%endblock %}
+{% block tail %}
+    <!-- Doc Edit Modal -->
+    <div class="modal fade" id="doc_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="edit_doc_modallabel">Document Link</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form action="{{ get_url('.doc_handler') }}" method="post" enctype="multipart/form-data" id="mod_doc_form">
+                <input type="hidden" name="object_id" value="{{ object_id }}">
+                <input type="hidden" name="action" value="link">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input form-control" required>
+                        <label class="custom-file-label" for="file">Select document file to be linked:</label>
+                    </div>
+                </div>
+                <hr>
+                <input type="submit" name="submit" value="Link File" class="btn btn-primary">
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

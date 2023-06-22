@@ -1,0 +1,77 @@
+{% extends 'myadmin3/my_master.html' %}
+{% block body %}
+{{ super() }}
+<br>
+<h1>Task Status</h1>
+<div class="card mb-2 shadow">
+    <div class="card-header">
+        <h3 class="card-title">Active Tasks</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="task_active">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Name</th>
+                    <th>Args</th>
+                    <th>Worker</th>
+                    <th>State</th>
+                    <th>Last run</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for task in active_tasks %}
+                <tr>
+                    <td>{{ task.task_id }}</td>
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.task_args }}</td>
+                    <td>{{ task.task_worker }}</td>
+                    <td>{{ task.task_state }}</td>
+                    <td>{{ task.task_last_run }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card mb-2 shadow">
+    <div class="card-header">
+        <h3 class="card-title">Inactive Tasks</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="task_scheduled">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Name</th>
+                    <th>Args</th>
+                    <th>ETA</th>
+                    <th>Worker</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in inactive_tasks %}
+                <tr>
+                    <td>{{ task.task_id }}</td>
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.task_args }}</td>
+                    <td>{{ task.task_worker }}</td>
+                    <td>{{ task.task_state }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block tail %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#task_active').DataTable();
+        $('#task_scheduled').DataTable();
+        $('#task_reserved').DataTable();
+    });
+</script>
+{% endblock %}

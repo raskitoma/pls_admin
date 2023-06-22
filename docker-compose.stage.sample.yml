@@ -1,0 +1,23 @@
+# For staging purposes
+services:
+  rsk-core-stage:
+    build: .
+    image: rsk-core:v1
+    container_name: rsk-core-stage
+    hostname: rsk-core-stage
+    restart: always
+    ports:
+      - 8124:5000
+    environment:
+      - TZ=America/Guayaquil
+      - APP_SETTINGS_MODULE=config.dev
+    # networks setup depends on intercomm between other container stacks. Depends on declaration near the end of this file.
+    networks:
+      master_network: # this is the network name
+
+# setup other packages/services like db, proxy reverse, etc.
+
+# setup network if required
+networks:
+  master_network:
+    external: True

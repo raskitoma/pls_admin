@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}	
+
+<body id="page-top"  style="background-image: url('/assets/img/bg002.jpg'); background-size:cover;height: 100vh; background-position:center right;">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+
+                {% include ('site_navbar.html') %}
+                
+                <div class="container-fluid">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col md-8">
+                                <div class="card shadow mb-3">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 fw-bold">Canje de pines</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="alertax"></div>
+                                        {% with messages = get_flashed_messages(with_categories=true) %}
+                                        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+                                        {% if messages %}
+                                        {% for category, message in messages %}
+                                        {% include('alert.html') %}
+                                        {% endfor %}
+                                        {% endif %}
+                                        {% endwith %}
+                                        <form method="post" action="/redeem">
+                                            <div class="input-group">
+                                                <span class="input-group-text"><strong>Pin</strong></span>
+                                                <input class="form-control" type="text" id="pin" placeholder="Ingrese aquí el pin/clave a canjear" name="pin" aria-label="Pin" aria-describedby="redeem">
+                                                <button type="button" class="btn btn-primary" id="redeem" name="redeem">Canjear</button>
+                                            </div>
+                                        </form>                    
+                                    </div>
+                                </div>
+                                <div class="card bg-info shadow mb-3">
+                                    <div class="card-header py-3">
+                                        <h5 class="text-white">
+                                            <i class="bi bi-patch-question-fill"></i>
+                                            <span class="m-0 fw-bold">Cómo canjear?</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body text-dark bg-light">
+
+                                        <p class="m-0">Para canjear un PIN o CLAVE, ingrese el código en el campo de texto y presione el botón "Canjear". Si el PIN o CLAVE son válidos, se le asignará el ingreso de un pronóstico.</p>
+                                        <p class="m-0 fw-bold">Usted puede tener varias tarjetas/pronósticos asociados a su cuenta.</p>
+                                        <hr>
+                                        <p class="m-0">El PIN o CLAVE se encuentran al reverso de la tarjeta que adquirió:</p>
+                                        <p class="text-center"><img src="/assets/img/tarjeta_reverso.png" class="img-fluid shadow" alt="Responsive image" style="max-height: 200px;">
+                                        <hr>
+                                        <p class="m-0">Ese PIN o CLAVE es el que debe ingresar en el formulario de CANJE.</p>
+                                        <p class="text-center"><img src="/assets/img/reverso_instrucciones.png" class="img-fluid shadow" alt="Responsive image" style="max-height: 200px;"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col md-4">
+                        <div class="card shadow mb-3">
+                            <div class="alert alert-danger m-2">
+                                <h4>Advertencia</h4>
+                                <p>No recargar la página.</p>
+                                <hr>
+                                <h4>PIN es lo mismo que la CLAVE que está en su tarjeta.</h4>
+                                <p>Cualquier novedad o inquietud, contactar a <a href="mailto:{{ app_config.app_supp }}">soporte</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {% include ('site_footer.html') %}
+    </div>
+    {% include ('site_upper.html') %}
+    </div>
+    {% include ('site_scripts.html') %}
+    <script>
+        function removeAllChildNodes(parent) {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+        $(document).ready(function(){
+            $('#redeem').click(function(){
+
+                var pin_t = $('#pin');
+                var pin_b = $('#redeem');
+
+                pin_t.disabled = true;
+                pin_b.disabled = true;
+                msg_res = $('#alertax');
+
+                removeAllChildNodes(msg_res[0]);
+
+                if (pin_t.val() == ''){
+                    obj_txt = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error:</strong> Debe ingresar un pin!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                    msg_res.append(obj_txt);
+                } else {
+                    fetch('/redeem', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            pin: pin_t.val()
+                        })
+                    }).then(data => {
+                        switch(data.status) {
+                            case 200: //success
+                                obj_txt = '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Éxito:</strong> Pin canjeado! <a href="/pronosticos">Ingrese su pronóstico!</a><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                                msg_res.append(obj_txt);
+                                break;
+                            case 401: //unauthorized
+                                obj_txt = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error:</strong> Tiene que <a hrerf="/login">iniciar sesión</a> nuevamente!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                                msg_res.append(obj_txt);
+                                break;
+                            case 403: //forbidden
+                                obj_txt = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error:</strong> Pin no válido o canjeado! Contacte a <a href="mailto:{{ app_config.app_supp }}">soporte</a>.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                                msg_res.append(obj_txt);
+                                break;
+                            default: //bad request
+                                obj_txt = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error:</strong> Pin inválido!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                                msg_res.append(obj_txt);
+                                break;
+
+                        }
+                        console.log(data);
+                        console.log(data.status);
+                    })
+
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

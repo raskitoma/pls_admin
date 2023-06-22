@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}	
+{% include ('body_stylingb.html') %}
+
+<body class="bg-gradient-primary">
+    <div class="container">
+        <div class="flex-grow-1 pt-3 pb-1">
+            <h1 class="text-white text-center"><img src="/assets/img/app001_white.svg" class="img-fluid mx-auto p-1" width="75px">{{ app_config.app_name }}</h1>
+        </div>
+        <div class="card shadow-lg o-hidden border-0 my-2">
+            <div class="card-body p-1">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="flex-grow-1 ">
+                            <img src="/assets/img/app001.svg" class="img-fluid mx-auto d-block p-2" alt="{{ app_config.app_name }}" width="300">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-2">
+                            <div class="text-center">
+                                <h4>Create an account!</h4>
+                            </div>
+                            <hr>
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                {% include('alert.html') %}
+                                {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                            <form class="user needs-validation" action="/register_user" method="POST" >
+                                <div class="mb-3">    
+                                    <div class="mb-3"><input class="form-control form-control-user" type="text" id="fullname" placeholder="Fullname" name="fullname" required>
+                                    <div class="valid-tooltip">
+                                        Thanks!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please, input your full name.
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-user" type="email" id="email" aria-describedby="email" placeholder="Email" name="email" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-user" type="phone" id="phone" aria-describedby="phone" placeholder="Phone number" name="phone" required>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row mb-3">
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="password" id="password" placeholder="Password" name="password" required></div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password" id="password_repeat" placeholder="Confirm password" name="password_repeat" required></div>
+                                    <div class="valid-tooltip">
+                                        Thanks!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please enter password and confirmation!
+                                    </div>
+                                </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Register account</button>
+                                <hr>
+                            </form>
+                            <div class="text-center"><a class="small" href="/">Do you have an account? Login!</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include ('site_upper.html') %}
+{% include ('site_footer.html') %}
+{% include ('site_scripts.html') %}
+</body>
+
+</html>

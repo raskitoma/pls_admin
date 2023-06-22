@@ -1,0 +1,8 @@
+{% macro extras_row(action, row_id, row) %}
+<form class="icon" method="GET" action="{{ get_url('.xtras_docs') }}" target="_self">
+  <input type="hidden" name="id" value="{{ get_pk_value(row) }}"/>
+  <button type="submit" class="ml-2" title="{{ _gettext('Manage Documents') }}">
+    <i class="fas fa-camera"></i>
+  </button>
+</form>
+{% endmacro %}

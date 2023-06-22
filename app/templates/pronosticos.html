@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}
+{% include ('group_header.html') %}
+
+<body id="page-top" data-quinela="{{ selected_quinela }}" style="background-image: url('/assets/img/soccerfield.jpg'); height: 100vh;background-position:center right;">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content mb-4">
+                
+            {% include ('site_navbar.html') %}
+
+            <div class="container-fluid">
+
+            {% if fifa_stage %}
+                {%
+                    if quinela_count > 0 
+                %}
+                    <div class="card shadow mb-4 rounded-pill">
+                        <div class="card-body bg-light bg-gradient rounded-pill">
+                            <div class="input-group p-2">
+                                <span class="input-group-text mb-1" id="basic-addon1">Editando {{ app_config.app_quin }} #</span>
+                                <select class="form-select form-select-sm mb-1" aria-label=".form-select-lg example" id="quinela_select" onchange="changePage()">
+                                    <option selected>Seleccione una {{ app_config.app_quin }} para participar:</option>
+                                    {% if quinelas %}
+                                        {% for quinela in quinelas|sort(attribute='tarjeta') %}
+                                            {% set qselected = "" %}
+                                            {% if quinela.id == selected_quinela %}
+                                                {% set qselected = "selected" %}
+                                            {% endif %}
+                                            <option value="{{ quinela.id }}" {{ qselected }}>{{ '%06d' % quinela.tarjeta }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {%
+                        if selected_quinela != 0
+                    %}
+                        <h3 class="text-white mb-4">{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - Pronóstico {{ fifa_stage.stage_name }}</h3>
+
+                        {%
+                            if fifa_stage.stage == '1'
+                        %}
+                        <!-- Primera Etapa, Primera parte -->
+                        <div class="card shadow mb-4 bg-white">
+                            <div class="card-header bg-warning bg-gradient text-dark shadow">
+                                <h4>{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - Primera Sección: Resultados Partidos</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info shadow" role="alert">
+                                    <p>De acuerdo a su predicción elija qué equipo gana por partido o si termina en empate.</p>
+                                </div>                                                                                
+                                <div class="table-responsive">
+                                    <table class="table table-stripped table-hover table-bordered table-sm table-centered mx-auto shadow" style="max-width: 800px;">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th style="width: 40px;" class="text-center">Id</th>
+                                                <th style="width: 150px;" class="text-center">Fecha Partido</th>
+                                                <th style="max-width: 580px;" class="text-center">Resultado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for fifa_match in fifa_matches %}
+                                            <tr>
+                                                <td class="text-center">{{ fifa_match.partido_id }}</td>
+                                                <td class="text-center">{{ fifa_match.match_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                                <td class="text-center">
+                                                    <!-- If a prediction exists, show it -->
+                                                    {% if pmatches[fifa_match.partido_id] %}
+                                                        {% set result0 = 'checked' if pmatches[fifa_match.partido_id].result == 0 else '' %}
+                                                        {% set result1 = 'checked' if pmatches[fifa_match.partido_id].result == 1 else '' %}
+                                                        {% set result2 = 'checked' if pmatches[fifa_match.partido_id].result == 2 else '' %}
+                                                    {% endif %}
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" class="btn-check" name="partido_{{ fifa_match.partido_id }}" id="partido_{{ fifa_match.partido_id }}_1" data-match_id="{{ fifa_match.partido_id }}" data-prediction="1" data-team="{{ fifa_match.team1 }}" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ result1 }}>
+                                                        <label class="btn btn-outline-success" style="width: 150px;" for="partido_{{ fifa_match.partido_id }}_1">{{ paises[fifa_match.team1] }}</label>
+                                                        <input type="radio" class="btn-check"  name="partido_{{ fifa_match.partido_id }}" id="partido_{{ fifa_match.partido_id }}_0" data-match_id="{{ fifa_match.partido_id }}" data-prediction="0" data-team="0" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ result0 }}>
+                                                        <label class="btn btn-outline-secondary" style="width: 150px;" for="partido_{{ fifa_match.partido_id }}_0">Empate</label>
+                                                        <input type="radio" class="btn-check"  name="partido_{{ fifa_match.partido_id }}" id="partido_{{ fifa_match.partido_id }}_2" data-match_id="{{ fifa_match.partido_id }}" data-prediction="2" data-team="{{ fifa_match.team2 }}" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ result2 }}>
+                                                        <label class="btn btn-outline-primary" style="width: 150px;" for="partido_{{ fifa_match.partido_id }}_2">{{ paises[fifa_match.team2] }}</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Primera Etapa, Segunda parte / Drag -->
+                        <div class="card shadow mb-4 d-none d-xl-block">
+                            <div class="card-header bg-warning bg-gradient text-dark shadow">
+                                <h4>{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - Segunda Sección: Posiciones de Grupos</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info shadow" role="alert">
+                                    <p>Arrastre los paises dentro de cada grupo para ordenarlos de acuerdo a su predicción.</p>
+                                </div>                                                
+                                <!-- Content -->
+                                {% for block in [['A', 'B', 'C', 'D'],['E', 'F', 'G', 'H' ]] %}
+                                <div class="row">
+                                    {% for group in block %}
+                                    <div class="col sm-4">
+                                        <p class="text-center fw-bolder">GRUPO {{ group }}</p>
+                                        <ul id="grupo_{{ group }}" data-grupo="{{ group }}">
+                                            {% if (pgroups|selectattr('group', 'eq', group))|first %}
+                                                {% for teams in pgroups %}
+                                                    {% if teams.group == group %}
+                                                    <li data-group="{{ teams.group }}" data-teamid="{{ teams.id }}" data-team="{{ paises[teams.id] }}" class="text-center bg-primary text-white">{{ paises[teams.id] }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                {% for teams in fifa_groups.values() %}
+                                                    {% if teams.group == group %}
+                                                        <li data-group="{{ group }}" data-teamid="{{ teams.id }}" data-team="{{ teams.pais }}" class="text-center">{{ teams.pais }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <hr>
+                                {% endfor %}
+                                <!-- End Content -->
+                            </div>
+                        </div>
+
+                        <!-- Primera Etapa, Segunda parte / Mobile -->
+                        <div class="card shadow mb-4 d-block d-xl-none">
+                            <div class="card-header bg-warning bg-gradient text-dark shadow">
+                                <h4>{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - Segunda Sección: Posiciones de Grupos</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info shadow" role="alert">
+                                    <p>Seleccione los paises dentro de cada grupo para ordenarlos de acuerdo a su predicción.</p>
+                                </div>                                                                                
+                                <div class="table-responsive small">
+                                    {% for groupmaster in [['A', 'B'], ['C', 'D'], ['E', 'F'], ['G', 'H' ] ]%}
+                                    <table class="table table-stripped table-hover table-bordered table-sm mx-auto shadow">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                {% for group in groupmaster %}
+                                                    <th class="text-center" style="width: 150px;">GRUPO {{ group }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for position in (1, 2, 3, 4) %}
+                                            <tr>
+                                                {% for group in groupmaster %}
+                                                {% set pos_group = [0,0,0,0] %}
+                                                {% set gselected = (pgroups|selectattr('position', 'eq', position)|selectattr('group', 'eq', group))|first %}
+                                                {% if gselected %}
+                                                    {% set pos_group = gselected.id %}
+                                                {% else %}
+                                                    {% set pos_group = 0 %}
+                                                {% endif %}
+                                                <td class="text-center">
+                                                    <div class="input-group mb-0">
+                                                        <span class="input-group-text mb-1 small" id="basic-addon1">{{ position }}{{ group }}</span>
+                                                        <select class="form-select form-select-sm mb-1" data-select-{{ group }}="grupo" data-quinela="{{ selected_quinela }}" data-group="{{ group }}" data-position="{{ position }}" aria-label=".form-select-lg example" id="groups_{{ group }}{{ position }}" onchange="group_rec(this);">
+                                                            <option selected>Elegir...</option>
+                                                            {% for teams in fifa_groups.values() %}
+                                                                {{ teams.group }}
+                                                                {% if teams.group == group %}
+                                                                    <option value="{{ teams.id }}" {{ 'selected' if teams.id==pos_group }}>{{ teams.pais }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Primera Etapa End -->
+                        {% else %}
+                        <!-- Partidos otras etapas -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header bg-warning bg-gradient text-dark shadow">
+                                <h4>{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - Resultados Partidos</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-stripped table-hover table-bordered table-sm table-centered mx-auto shadow" style="max-width: 900px;">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th style="width: 40px;" class="text-center">Id</th>
+                                                <th style="width: 150px;" class="text-center">Fecha Partido</th>
+                                                <th style="max-width: 400px;" class="text-center">Ganador</th>
+                                                <th style="max-width: 250px;" class="text-center">Resultado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for fifa_match in fifa_matches %}
+                                            <tr>
+                                                <td class="text-center">{{ fifa_match.partido_id }}</td>
+                                                <td class="text-center">{{ fifa_match.match_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                                <td class="text-center">
+                                                    <!-- If a prediction exists, show it -->
+                                                    {% if pmatches[fifa_match.partido_id] %}
+                                                        {% set resultt1 = 'checked' if pmatches[fifa_match.partido_id].winner == fifa_match.team1 else '' %}
+                                                        {% set resultt2 = 'checked' if pmatches[fifa_match.partido_id].winner == fifa_match.team2 else '' %}
+                                                        {% set result0 = 'checked' if pmatches[fifa_match.partido_id].result == 0 else '' %}
+                                                        {% set result1 = 'checked' if pmatches[fifa_match.partido_id].result == 1 else '' %}
+                                                        {% set result2 = 'checked' if pmatches[fifa_match.partido_id].result == 2 else '' %}
+                                                    {% endif %}
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" class="btn-check" name="partido_{{ fifa_match.partido_id }}t" id="partido_{{ fifa_match.partido_id }}_team1" data-match_id="{{ fifa_match.partido_id }}" data-prediction="" data-team="{{ fifa_match.team1 }}" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ resultt1 }}>
+                                                        <label class="btn btn-outline-success" style="width: 135px;" for="partido_{{ fifa_match.partido_id }}_team1">{{ paises[fifa_match.team1] }}</label>
+                                                        <input type="radio" class="btn-check" name="partido_{{ fifa_match.partido_id }}t" id="partido_{{ fifa_match.partido_id }}_team2" data-match_id="{{ fifa_match.partido_id }}" data-prediction="" data-team="{{ fifa_match.team2 }}" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ resultt2 }}>
+                                                        <label class="btn btn-outline-primary" style="width: 135px;" for="partido_{{ fifa_match.partido_id }}_team2">{{ paises[fifa_match.team2] }}</label>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" class="btn-check" name="partido_{{ fifa_match.partido_id }}" id="partido_{{ fifa_match.partido_id }}_0" data-match_id="{{ fifa_match.partido_id }}" data-prediction="0" data-team="" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ result0 }}>
+                                                        <label class="btn btn-outline-success" style="width: 80px;" for="partido_{{ fifa_match.partido_id }}_0">Normal</label>
+                                                        <input type="radio" class="btn-check" name="partido_{{ fifa_match.partido_id }}" id="partido_{{ fifa_match.partido_id }}_1" data-match_id="{{ fifa_match.partido_id }}" data-prediction="1" data-team="" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ result1 }}>
+                                                        <label class="btn btn-outline-secondary" style="width: 80px;" for="partido_{{ fifa_match.partido_id }}_1">Extra</label>
+                                                        <input type="radio" class="btn-check" name="partido_{{ fifa_match.partido_id }}" id="partido_{{ fifa_match.partido_id }}_2" data-match_id="{{ fifa_match.partido_id }}" data-prediction="2" data-team="" data-stage="{{ fifa_stage.stage }}" onclick="update_match(this);" {{ result2 }}>
+                                                        <label class="btn btn-outline-primary" style="width: 80px;" for="partido_{{ fifa_match.partido_id }}_2">Penales</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if fifa_stage.stage == '1' or fifa_stage.stage == '5' %}
+                        <!-- Final -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header bg-warning bg-gradient text-dark shadow">
+                                <h4>{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - {{ 'Tercera Sección: ' if fifa_stage.stage=='1'}}Pronóstico Final Campeonato</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info shadow" role="alert">
+                                    <p>Seleccione de acuerdo a su criterio, qué paises quedan como Campeón, Vice-Campéon, Tercero y Cuarto Lugar.</p>
+                                </div>                                                                                
+                                <div class="table-responsive">
+                                    {% set teamf1 = (pfinal|selectattr('position', 'eq', 1))|first %}
+                                    {% set teamf2 = (pfinal|selectattr('position', 'eq', 2))|first %}
+                                    {% set teamf3 = (pfinal|selectattr('position', 'eq', 3))|first %}
+                                    {% set teamf4 = (pfinal|selectattr('position', 'eq', 4))|first %}
+                                    {% if teamf1 %}
+                                        {% set selected1=teamf1.team %}
+                                    {% else %}
+                                        {% set selected1='' %}
+                                    {% endif %}
+                                    {% if teamf2 %}
+                                        {% set selected2=teamf2.team %}
+                                    {% else %}
+                                        {% set selected2='' %}
+                                    {% endif %}
+                                    {% if teamf3 %}
+                                        {% set selected3=teamf3.team %}
+                                    {% else %}
+                                        {% set selected3='' %}
+                                    {% endif %}
+                                    {% if teamf4 %}
+                                        {% set selected4=teamf4.team %}
+                                    {% else %}
+                                        {% set selected4='' %}
+                                    {% endif %}
+
+
+                                    <table class="table table-stripped table-hover table-bordered mx-auto shadow" style="max-width: 450px;" id="pro_final">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="text-center" style="width: 150px;"><strong>RESULTADO</strong><br></th>
+                                                <th class="text-center" style="width: 300px;"><strong>PAIS</strong><br></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">CAMPEON</td>
+                                                <td class="text-center">
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-lg example" id="final_1" data-stage="{{ fifa_stage.stage }}" data-quinela="{{ selected_quinela }}" data-position="1" onchange="final_rec(this);">
+                                                        <option selected>Elegir Campeón:</option>
+                                                        {% for pais in paises2 %}                                                        
+                                                            {{ pais }}
+                                                            <option value="{{ pais.id }}" {{ 'selected' if pais.id==selected1 }}>{{ pais.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td class="text-center">VICE-CAMPEON</td>
+                                                <td class="text-center">
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-lg example" id="final_2" data-stage="{{ fifa_stage.stage }}" data-quinela="{{ selected_quinela }}" data-position="2" onchange="final_rec(this);">
+                                                        <option selected>Elegir Vice-Campeón:</option>
+                                                        {% for pais in paises2 %}
+                                                            {{ pais}}
+                                                            <option value="{{ pais.id }}" {{ 'selected' if pais.id==selected2 }}>{{ pais.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td class="text-center">TERCER LUGAR</td>
+                                                <td class="text-center">
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-lg example" id="final_3" data-stage="{{ fifa_stage.stage }}" data-quinela="{{ selected_quinela }}" data-position="3" onchange="final_rec(this);">
+                                                        <option selected>Elegir Tercer Lugar:</option>
+                                                        {% for pais in paises2 %}
+                                                            {{ pais}}
+                                                            <option value="{{ pais.id }}" {{ 'selected' if pais.id==selected3 }}>{{ pais.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td class="text-center">CUARTO LUGAR</td>
+                                                <td class="text-center">
+                                                    <select class="form-select form-select-sm" aria-label=".form-select-lg example" id="final_4" data-stage="{{ fifa_stage.stage }}" data-quinela="{{ selected_quinela }}" data-position="4" onchange="final_rec(this);">
+                                                        <option selected>Elegir Cuarto Lugar:</option>
+                                                        {% for pais in paises2 %}
+                                                            {{ pais}}
+                                                            <option value="{{ pais.id }}" {{ 'selected' if pais.id==selected4 }}>{{ pais.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% else %}
+
+                    <div class="card shadow mb-4">
+                        <div class="alert alert-danger m-0">
+                            <h4>Elegir {{ app_config.app_quin }} para ingresar/modificar pronóstico:</h4>
+                            <p>Usando el selector de arriba, elija una {{ app_config.app_quin }} para ingresar o modificar pronósticos.</p>
+                            <p>Quiere ingresar más pronósticos a su cuenta? <a href="/canje">Canjear aquí para participar.</a></p>
+                        </div>
+                    </div>
+    
+                    {% endif %}
+                    <!-- Std alert for all stages -->
+                    <div class="card shadow mb-4">
+                        <div class="alert alert-warning m-0 small">
+                            <h4>Advertencia</h4>
+                            <p>Pronósticos de esta etapa pueden ser ingresados hasta:&nbsp;<strong>{{ fifa_stage.end_time }}</strong></p>
+                            <p>Pronósticos no requieren validación, pueden ser editados hasta que comienza la etapa.&nbsp; Una vez alcanzada la fecha de inicio de la respectiva Etapa, los pronósticos NO podrán ser editados y quedarán validados de manera automática.</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card shadow mb-4">
+                        <div class="alert alert-primary m-0">
+                            <h4>Usuario no cuenta con {{ app_config.app_quin }}s activas para Ingresar Pronósticos.</h4>
+                            <p><a href="/canje">Canjear aquí para participar.</a></p>
+                            <p>Etapa actual: {{ fifa_stage.stage_name }}. Pronósticos de esta etapa pueden ser ingresados hasta:&nbsp; {{ fifa_stage.end_time }} </p>
+                            <p>Pronósticos no requieren validación, pueden ser editados hasta que comienza la etapa.&nbsp; Una vez alcanzada la fecha de inicio de la respectiva Etapa, los pronósticos NO podrán ser editados y quedarán validados de manera automática.</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% else %}
+
+            <div class="card shadow mb-4">
+                <div class="alert alert-danger m-0">
+                    <h4>No es posible ingresar/modificar pronósticos:</h4>
+                    <ul>
+                        <li>Etapa ya iniciada(en juego) o terminada.</li>
+                    </ul>
+                    <p>Puede revisar sus pronósticos <a href="/proreview">aquí</a>.</p>
+                </div>
+            </div>
+            {% endif %}
+            </div>
+
+            </div>
+        </div>
+    </div>
+    {% include ('site_footer.html') %}
+    {% include ('site_upper.html') %}
+    {% include ('site_scripts.html') %}
+
+    {% if fifa_stage %}
+    <script>
+        function changePage(){
+            var page = document.getElementById("quinela_select").value;
+            window.location.href = '/pronosticos?quinela=' + page;
+        }
+    </script>
+
+    {%
+        if selected_quinela != 0
+    %}
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+        {% for group in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' ] %}
+            slist(document.getElementById("grupo_{{ group }}"));
+        {% endfor %}
+        positions=[];
+        });
+    </script>
+    <script src="assets/js/sort-list.js"></script>
+    <script src="assets/js/soccer.js"></script>
+    <script src="assets/js/validations.js"></script>
+    {% endif %}
+    {% endif %}
+</body>
+</html>

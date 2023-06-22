@@ -1,0 +1,244 @@
+{% extends 'myadmin3/my_master.html' %}
+{% block head %}
+    {% if (dox_list is defined) %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
+    {% endif %}
+{% endblock %}
+{% block body %}
+    {{ super() }}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                  <h1 class="m-0 text-dark">{{ my_caller }} - Document Management</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                  <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ get_url(source_id) }}">{{ my_caller }}</a></li>
+                    <li class="breadcrumb-item active">Manage Documents</li>
+                  </ol>
+                </div><!-- /.col -->
+              </div><!-- /.row -->
+              <div class="row mb-2 align-items-end">
+                <div class="col-sm-8">
+                    <p class="lead">{{ object_data }}</p>
+                </div><!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="float-sm-right ">
+                    <button type="none" data-object_id="${object_id}" data-doc_action="doc_new" data-doc_id="" class="btn btn-sm btn-success shadow" title="Add Document">
+                        <i class="fas fa-plus-circle"></i>&nbsp;Add document
+                    </button>                    
+                  </div>
+                </div><!-- /.col -->
+              </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card p-2 shadow">
+            <table id="object_docs" class="table table-light thead-dark table-striped table-bordered table-hover table-responsive-sm">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Created at</th>
+                        <th>Document Date</th>
+                        <th>Description</th>
+                        <th>Kind</th>
+                        <th>Document</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+            </div>
+            <br>
+            <a href="{{ get_url(source_id) }}" class="btn btn-primary btn-sm shadow"><i class="fas fa-arrow-left"></i>&nbsp;Back to list</a>
+            <br>
+        </div>
+    </section>
+{% endblock %}
+
+{% block tail %}
+    <!-- Doc Modal -->
+    <div class="modal fade" id="doc_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="doc_modallabel">New Document</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form action="" method="post" enctype="multipart/form-data" id="mod_doc_form">
+                <input type="hidden" name="id" value="{{ object_id }}">
+                <input type="hidden" name="mod_doc_id" value="0">
+                <input type="hidden" name="action" value="add">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input form-control" required>
+                        <label class="custom-file-label" for="file">Select document file</label>
+                    </div>
+                </div>
+
+                <div class="input-group input-group mb-3">
+                    <label class="input-group-text" for="doc_description">Description</label>
+                    <input type="text" name="doc_description" class="form-control" placeholder="Description" value="{{ object_data }}"  required>
+                </div>
+
+                <div class="input-group input-group mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="input-group-text" for="doc_date">Document Date</label>
+                            <input type="date" name="doc_date" class="form-control" value="{{ current_day }}" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="input-group-text" for="kind">Document Type</label>
+                            <select name="kind" class="form-control" required>
+                                {% for kind in doc_types %}
+                                    <option value="{{ kind.id }}">{{ kind.description }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <textarea name="doc_obs" class="form-control" placeholder="Notes"></textarea>
+                </div>
+
+                <hr>
+                <input type="submit" name="submit" id="doc_submit" value="Submit Document" class="btn btn-primary">
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal Loading -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="loadingModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="spinner-border text-primary mr-2" role="status"></div>
+                <strong>Loading...</strong>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal Error -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="errorData">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">Error retrieving data.</div>
+            <div class="modal-body">
+            <div class="d-flex justify-content-center align-items-center">
+                <strong>Error loading data. Try again.</strong>
+                <div class="alert alert-danger" role="alert" id="errorData_message"></div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  
+    {% if (dox_list is defined) %}
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        var data = {{ dox_list | tojson }};
+        let my_source = '{{ get_url(source_id) }}';
+        $(document).ready( function () {
+            $('#object_docs').DataTable({
+                data: data,
+                columns: [
+                    { data: "id" },
+                    { data: "created_at" },
+                    { data: "doc_date" },
+                    { data: "description" },
+                    { data: "kind" },
+                    { data: "metadoc_id" },
+                    { data: "active" },
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [ 0 ],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [ 1 ],
+                        "render": function ( data, type, row ) {
+                            return moment(data).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                    },
+                    {
+                        "targets": [ 2 ],
+                        "render": function ( data, type, row ) {
+                            return moment(data).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                    },
+                    {
+                        "targets": [ 5 ],
+                        "render": function ( data, type, row ) {
+                            if (data) {
+                                let doc_rq_link = `{{ get_url('.load_doc') }}?doxid=${data}`;
+                                defcontent = `<a href="${doc_rq_link}" target="_blank"><span class="badge badge-warning"><i class="fas fa-eye"></i>&nbsp;Download Document</span></a>`;
+                                return defcontent ;
+                            } else {
+                                return '<span class="badge badge-danger">Document not available</span>';
+                            }
+                        }
+                    },
+                    {
+                        "targets": [ 6 ],
+                        "render": function ( data, type, row ) {
+                            if (data == true) {
+                                return '<span class="badge badge-success">Active</span>';
+                            } else {
+                                return '<span class="badge badge-danger">Inactive</span>';
+                            }
+                        }
+                    },
+                    {
+                        "targets": [ 7 ],
+                        "render": function ( data, type, row ) {
+                            let object_id = '{{ object_id }}';
+                            let active_status = '';
+                            if (row.active) {
+                                active_status = 'success';
+                            } else {
+                                active_status = 'danger';
+                            }
+                            let my_action_buttons = `
+                                <button type="none" data-object_id="${object_id}" data-doc_action="doc_status" data-doc_id="${row.metadoc_id}" class="btn btn-sm btn-${active_status} ml-1" title="Status">
+                                    <i class="fas fa-toggle-on"></i>
+                                </button>
+                                <button type="none" data-object_id="${object_id}" data-doc_action="doc_edit" data-doc_id="${row.metadoc_id}" class="btn btn-sm btn-primary ml-1" title="Update">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="none" data-object_id="${object_id}" data-doc_action="doc_delete" data-doc_id="${row.metadoc_id}" class="btn btn-sm btn-danger ml-1" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            `;
+
+                            return my_action_buttons;
+                        },
+                        "width": "200px"
+                    }
+                ],
+                "order": [[ 1, "desc" ]],
+                "pageLength": 10,
+                "lengthMenu": [ 10, 25, 50, 75, 100 ],
+                "initComplete": function(settings, json) {
+                    start_button_action(my_source);
+                },
+                
+            });
+        });
+    </script>
+    {% endif %} 
+{% endblock %}

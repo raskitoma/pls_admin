@@ -1,0 +1,37 @@
+button span.fa.fa-trash.glyphicon.glyphicon-trash {
+    color: gray;
+    margin-left: 1em;
+}
+
+.fa-check-circle,
+.glyphicon-ok-circle,
+.icon-ok-circle {
+    color: green;
+}
+
+.fa-times-circle,
+.glyphicon-times-sign,
+.icon-times-sign,
+.fa-minus-circle,
+.glyphicon-minus-sign,
+.icon-minus-sign {
+    color: red;
+}
+
+.console {
+    max-height: calc(100vw - 50px) !important;
+    height: calc(100vh - 50px) !important;
+}
+
+/* icon-change */
+table button.ml-2 i {
+    font-size: 1.2em !important;
+}
+
+table button span {
+    font-size: 1.2em !important;
+}
+
+table a span {
+    font-size: 1.2em !important;
+}

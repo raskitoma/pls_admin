@@ -1,0 +1,73 @@
+{% extends 'myadmin3/my_master.html' %}
+{% block body %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+{% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<br>
+<h4>Generar Lote de Pines</h4>
+<br>
+<div class="card shadow">
+    <div class="card-body">
+        <form class="user needs-validation" action="/admin/generate_batch/" method="POST" >
+            <strong>Estructura de PIN?</strong>
+            <div class="mb-3">    
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="pin_sections" id="inlineRadio1" value="True">
+                    <label class="form-check-label" for="inlineRadio1">Números</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="pin_sections" id="inlineRadio2" value="False">
+                    <label class="form-check-label" for="inlineRadio2">Letras y números</label>
+                  </div>
+                </div>
+            <hr>
+
+            <div class="mb-3">
+                <label for="pin_length">Longitud de secciones</label>
+                <select class="custom-select" id="pin_length" name="pin_length">
+                    <option selected>Seleccione una longitud válida</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="pin_batch_obs">Descripción del Lote:</label>
+                <input type="text" class="form-control" id="pin_batch_obs" name="pin_batch_obs" placeholder="Descripción del Lote" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="pin_qty">Cantidad de pines a generar:</label>
+                <input type="number" class="form-control" id="pin_qty" name="pin_qty" placeholder="Cantidad de pines" required>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="pin_accept" name="pin_accept" required>
+                    <label class="form-check-label" for="pin_accept">
+                    Acepta creación de lote?
+                    </label>
+                </div>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-primary d-block btn-user w-100" type="submit">Generar Lote de Pines</button>
+            
+            <hr>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

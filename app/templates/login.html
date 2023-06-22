@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}
+{% include ('body_styling.html') %}
+
+<body class="bg-gradient-primary">
+    <div class="container">
+        <div class="flex-grow-1 pt-3 pb-1">
+            <h1 class="text-white text-center"><img src="/assets/img/app001_white.svg" class="img-fluid mx-auto p-1" width="75px">{{ app_config.app_name }}</h1>
+        </div>
+        <div class="card shadow-lg o-hidden border-0 my-2">
+            <div class="card-body p-1">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="flex-grow-1 ">
+                            <img src="/assets/img/app001.svg" class="img-fluid mx-auto d-block p-2" alt="{{ app_config.app_name }}" width="300">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-2">
+                            <div class="text-center">
+                                <h4 class="text-dark mb-4">Welcome!</h4>
+                                Enter your email and password to access the system.
+                            </div>
+                            <hr>
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                {% include('alert.html') %}
+                                {% endfor %}
+                            {% endif %}
+                            {% endwith %}                                    
+                            <form class="user needs-validation" action="/login" method="POST" >
+                                <div class="mb-3"><input class="form-control form-control-user" type="email" id="username" aria-describedby="username" placeholder="email..." name="username" required></div>
+                                <div class="invalid-feedback">
+                                    Por favor ingrese su correo electrónico.
+                                </div>
+                                <div class="mb-3"><input class="form-control form-control-user" type="password" id="password" placeholder="password..." name="password" required></div>
+                                <div class="mb-3">
+                                </div><button class="btn btn-primary d-block btn-user w-100" type="submit">Login</button>
+                                <hr>
+                            </form>
+                            <div class="text-center"><a class="small" href="/forgot">Forgot password?</a><!-- / <a class="small" href="/register">Create an account!</a>--></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include ('site_upper.html') %}
+    {% include ('site_footer.html') %}
+    {% include ('site_scripts.html') %}
+</body>
+
+</html>

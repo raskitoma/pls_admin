@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}
+{% include ('group_header.html') %}
+{% include ('custom_fonts.html') %}
+
+<body id="page-top" data-quinela="{{ selected_quinela }}" style="background-image: url('/assets/img/soccerfield.jpg'); height: 100vh;background-position:center right fixed;">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content mb-4">
+                
+            {% include ('site_navbar.html') %}
+
+            <div class="container-fluid">
+
+                {%
+                    if quinela_count > 0 
+                %}
+
+                    <div class="card shadow mb-4 rounded-pill">
+                        <div class="card-body bg-light bg-gradient rounded-pill">
+                            <div class="input-group p-2">
+                                <span class="input-group-text mb-1" id="basic-addon1">Revisando {{ app_config.app_quin }} #</span>
+                                <select class="form-select form-select-sm mb-1" aria-label=".form-select-lg example" id="quinela_select" onchange="changePage()">
+                                    <option selected>Seleccione una {{ app_config.app_quin }} para visualizar:</option>
+                                    {% if quinelas %}
+                                        {% for quinela in quinelas|sort(attribute='tarjeta') %}
+                                            {% set qselected = "" %}
+                                            {% if quinela.id == selected_quinela %}
+                                                {% set qselected = "selected" %}
+                                            {% endif %}
+                                            <option value="{{ quinela.id }}" {{ qselected }}>{{ '%06d' % quinela.tarjeta }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {%
+                        if selected_quinela != 0
+                    %}
+                        <h2 class="text-white mb-4">{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - Revisión de Pronósticos</h2>
+
+
+                    {% for fifas in fifa_stages|sort(attribute='stage')  %}
+
+                        {% set plantilla = (fifa_matches|selectattr('stage','eq', fifas.stage|int)) %}
+
+                        <!-- Primera Etapa, Primera parte -->
+                        <div class="card shadow mb-5 bg-white">
+                            <div class="card-header bg-warning bg-gradient text-dark shadow text-quinela">
+                                <h3>{{ app_config.app_quin }} #{{ '%06d' % selected_tarjeta }} - {{ fifas.name }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info alert-sm shadow text-center text-quinela mx-auto small" role="alert" style="max-width: 750px;">
+                                    <h5 class="small">{{ 'Primera Sección - ' if fifas.stage=='1' }}{{ 'Partidos Eliminatorias' if fifas.stage=='1'}}{{ 'Partidos Octavos' if fifas.stage=='2' }}{{ 'Partidos Cuartos' if fifas.stage=='3' }}{{ 'Partidos Semifinal' if fifas.stage=='4' }}{{ 'Tercer Lugar y Final' if fifas.stage=='5' }}</h5>
+                                </div>                                                                                
+                                <div class="table-responsive small mb-4">
+                                    <table class="table table-stripped table-hover table-bordered table-sm table-centered mx-auto shadow" style="max-width: 750px;">
+                                        <thead class="table-dark text-quinela">
+                                            <tr>
+                                                <th style="max-width: 50px;" class="text-center">Id</th>
+                                                <th style="max-width: 250px;" class="text-center">Fecha</th>
+                                                <th class="text-center">Partido</th>
+                                                {% if fifas.stage!='1' %}'
+                                                <th style="min-width: 100px;" class="text-center">Gana</th>
+                                                {% endif %}
+                                                <th style="min-width: 100px;" class="text-center">Resultado</th>
+                                                <th style="max-width: 100px;" class="text-center">Puntos</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for fifa_match in plantilla  %}
+                                            <tr>
+                                                <td class="text-center bg-warning text-dark text-quinela">{{ fifa_match.partido_id }}</td>
+                                                <td class="text-center bg-warning text-dark text-quinela small">{{ fifa_match.match_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                                <td class="text-center bg-warning text-dark text-quinela small">{{ paises[fifa_match.team1] }} vs {{ paises[fifa_match.team2] }}</td>
+                                                {% if fifas.stage=='1' %}
+                                                    <td class="text-center">
+                                                        {% set valid_pro = namespace(value=0) %}
+                                                        {% for prm_id, prm_data in pmatches.items()  %}
+                                                            {% if prm_data.id==fifa_match.partido_id %}
+                                                                {% set prm = prm_data.result %}
+                                                                {% set valid_pro.value = valid_pro.value + 1 %}
+                                                                        {% if  prm == 0 %}
+                                                                            <span class="text-dark text-pronostico">Empate</span>
+                                                                        {% elif prm == 1 %}
+                                                                            <span class="text-dark text-pronostico">{{ paises[ fifa_match.team1 ] }}</span>
+                                                                        {% elif prm == 2 %}
+                                                                            <span class="text-dark text-pronostico">{{ paises[fifa_match.team2]}}</span>
+                                                                        {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% if valid_pro.value == 0 %}
+                                                         <span class="text-dark text-pronostico">------</span>
+                                                        {% endif %}
+                                                    </td>
+                                                {% else %}
+                                                    {% set valid_pro = namespace(value=0) %}
+                                                    {% for prm_id, prm_data in pmatches.items()  %}
+                                                    {% if prm_data.id==fifa_match.partido_id %}
+                                                        {% set prm = prm_data.result %}
+                                                        {% set valid_pro.value = valid_pro.value + 1 %}
+                                                    <td class="text-center text-dark text-pronostico">{{ paises[prm_data.winner] }}</td>
+                                                    <td class="text-center">
+                                                                        {% if  prm == 0 %}
+                                                                            <span class="text-dark text-pronostico">Normal</span>
+                                                                        {% elif prm == 1 %}
+                                                                            <span class="text-dark text-pronostico">Extra</span>
+                                                                        {% elif prm == 2 %}
+                                                                            <span class="text-dark text-pronostico">Penales</span>
+                                                                        {% endif %}
+                                                    </td>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% if valid_pro.value == 0 %}
+                                                    <td class="text-center">
+                                                        <span class="text-dark text-pronostico">------</span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="text-dark text-pronostico">------</span>
+                                                    </td>
+                                                    {% endif %}
+
+                                                {% endif %}
+                                                <td class="text-center text-pronostico">
+                                                    {% set valid_pro = namespace(value=0) %}
+                                                    {% for prm_id, prm_data in pmatches.items() %}
+                                                        {% if prm_data.id==fifa_match.partido_id %}
+                                                            {% set valid_pro.value = valid_pro.value + 1 %}
+                                                            <span class="text-dark text-pronostico">{{ prm_data.puntos }}</span>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if valid_pro.value == 0 %}
+                                                        <span class="text-dark text-pronostico">0</span>
+                                                    {% endif %}
+
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <div class="alert alert-success d-flex mx-auto shadow text-quinela" role="alert"  style="max-width: 750px;">
+                                        <h4 class="mx-auto">
+                                            <i class="bi bi-trophy-fill"></i>&nbsp;
+                                            {% set total_points_partidos = [48,16,20,14,20] %}
+                                            {% if fifas.stage == '1' %}
+                                                Puntos: {{ mi_tarjeta.detail_points['s11'] }}/{{ total_points_partidos[fifas.stage|int-1] }}
+                                            {% elif fifas.stage == '5' %}
+                                                Puntos: {{ mi_tarjeta.detail_points['s51'] }}/{{ total_points_partidos[fifas.stage|int-1] }}
+                                            {% else %}
+                                                Puntos: {{ mi_tarjeta.detail_points['s' + fifas.stage] }}/{{ total_points_partidos[fifas.stage|int-1] }}
+                                            {% endif %}
+                                        </h4>
+                                    </div>
+                                </div>
+                                {% if fifas.stage=='1' %}
+                                <hr class="my-3">
+                                <div class="alert alert-info alert-sm shadow text-center text-quinela mx-auto small" role="alert" style="max-width: 750px;">
+                                    <h5 class="small">Segunda Sección - Pronóstico de Grupos</h5>
+                                </div>                                                
+                                <!-- Content -->
+                                {% for block in [['A', 'B'], ['C', 'D'],['E', 'F'], ['G', 'H' ]] %}
+                                <div class="row small mx-auto" style="max-width: 750px;">
+                                    {% for group in block %}
+                                    <div class="col sm-4 d-flex">
+                                        <div class="card shadow mb-4 flex-fill">
+                                            <div class=" card-header">
+                                                <p class="text-center fw-bolder text-quinela">GRUPO {{ group }}</p>
+                                            </div>
+                                            <div class="card-body">
+                                            {% if (pgroups|selectattr('group', 'eq', group))|first %}
+                                                {% for teams in pgroups|sort(attribute='position') %}
+                                                    {% if teams.group == group %}
+                                                    <div class="bg-white mb-1 border row shadow">
+                                                        <div class="col-sm-2 bg-warning text-dark text-quinela text-center">
+                                                            {{ group }}{{ teams.position }}
+                                                        </div>
+                                                        <div class="col text-center">
+                                                            <span class="text-center text-dark text-pronostico">{{ paises[teams.id] }}</span>
+                                                        </div>
+                                                        <div class="col-sm-1 bg-light text-dark text-pronostico text-center">
+                                                            {{ teams.puntos }}
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                            <div class="bg-white mb-1 border row shadow">
+                                                    <span class="text-center text-dark text-pronostico">------</span>
+                                            </div>
+                                            {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}   
+                                </div>
+                                {% endfor %}
+                                <!-- end grupos -->
+                                <div class="alert alert-success d-flex mx-auto shadow text-quinela mx-auto" role="alert"  style="max-width: 750px;">
+                                    <h4 class="mx-auto">
+                                        <i class="bi bi-trophy-fill"></i>&nbsp;
+                                        Puntos: {{ mi_tarjeta.detail_points['s12'] }}/64
+                                    </h4>
+                                </div>
+                                {% endif %}
+                                {% if fifas.stage=='1' or fifas.stage=='5' %}
+                                <!-- Primera Etapa - Tercera Parte -->
+                                <hr class="my-3">
+                                <div class="alert alert-info alert-sm shadow text-center text-quinela mx-auto small" role="alert" style="max-width: 750px;">
+                                    <h5 class="small">{{ 'Tercera Sección - ' if fifas.stage=='1' }}Pronóstico Final de Campeonato</h5>
+                                </div>
+                                <div class="table-responsive small mb-4">
+                                    <table class="table table-stripped table-hover table-bordered table-sm table-centered mx-auto shadow" style="max-width: 750px;">
+                                        <thead class="table-dark text-quinela">
+                                            <tr>
+                                                <th style="width: 50px;" class="text-center">Posición</th>
+                                                <th style="max-width: 200px;" class="text-center">Equipo</th>
+                                                <th style="max-width: 50px;" class="text-center">Puntos</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for pos_id, pos_data  in [(1,'Campeón'),(2,'Vicecampeón'),(3,'Tercer Lugar'),(4,'Cuarto Lugar')] %}
+                                            <tr>
+                                                {% for finalp in pfinal|groupby('position') %}
+                                                    {% set mystage = 0 if fifas.stage=='1' else 1 %}
+                                                    {% set d_final = finalp[1][mystage] %}
+                                                    {% if d_final|length > 0 %}
+                                                        {% if d_final.position == pos_id %}
+                                                            {% if d_final.stage == fifas.stage %}
+                                                                <td class="text-center bg-warning text-dark text-quinela">{{ pos_data }}</td>
+                                                                <td class="text-center text-pronostico">{{ paises[d_final.team] }}</td>
+                                                                <td class="text-center text-pronostico">{{ d_final.puntos }}</td>
+                                                            {% endif %}
+                                                        {% endif %}                                            
+                                                    {% endif %}
+                                                {% endfor %}                                                
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="alert alert-success d-flex mx-auto shadow text-quinela" role="alert"  style="max-width: 750px;">
+                                    <h4 class="mx-auto">
+                                        <i class="bi bi-trophy-fill"></i>&nbsp;
+                                        {% if fifas.stage == '1' %}
+                                            {% set setor = 's13' %}
+                                        {% else %}
+                                            {% set setor = 's52' %}
+                                        {% endif %}
+                                        Puntos: {{ mi_tarjeta.detail_points[setor] }}/{{ '52' if fifas.stage=='1' else '16' }}
+                                    </h4>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                    </div>      
+                    
+                    <!-- Ribbon award with total points -->
+
+                    <div class="ribbon-award text-quinela shadow bg-warning bg-gradient">
+                        <span class="fw-bolder ribbon-award-text">
+                            {{ mi_tarjeta.total_points }}<hr class="ribbon-separator">250
+                        </span>
+                        <div class="ribbon-tie1 bg-warning bg-gradient shadow">.</div>
+                        <div class="ribbon-tie2 bg-warning bg-gradient shadow">.</div>
+                    </div>
+
+                    <!-- Ribbon award with total points -->
+
+                    {% else %}
+                    <div class="card shadow mb-4">
+                        <div class="alert alert-danger m-0">
+                            <h4>Elegir {{ app_config.app_quin }} para revisar su pronóstico:</h4>
+                            <p>Usando el selector de arriba, elija una {{ app_config.app_quin }} para revisar sus pronósticos.</p>
+                            <p>Quiere ingresar más pronósticos a su cuenta? <a href="/canje">Canjear aquí para participar.</a></p>
+                        </div>
+                    </div>
+    
+                    {% endif %}
+                    <!-- Std alert for all stages -->
+                    <div class="card shadow mb-4">
+                        <div class="alert alert-warning m-0 small">
+                            <h4>Advertencia</h4>
+                            <p>Esta es únicamente una visualizacion de los pronósticos por {{ app_config.app_quin }}s.  Estos pronósticos, de acuerdo a lo que usted ha ingresado, podrían estar incompletos. Si la etapa sigue activa, usted podrá modificarlos.</p>
+                            <p>Pronósticos no requieren validación, pueden ser editados hasta que comienza la etapa.&nbsp; Una vez alcanzada la fecha de inicio de la respectiva Etapa, los pronósticos NO pueden ser editados y quedarán validados de manera automática.</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card shadow mb-4">
+                        <div class="alert alert-info m-0">
+                            <h4>Usuario no cuenta con {{ app_config.app_quin }}s activas para revisión.</h4>
+                            <p><a href="/canje">Canjear aquí para participar.</a></p>
+                            <p>Etapa actual: {{ fifa_stage.stage_name }}. Pronósticos de esta etapa pueden ser ingresados hasta:&nbsp; {{ fifa_stage.end_time }} </p>
+                            <p>Pronósticos no requieren validación, pueden ser editados hasta que comienza la etapa.&nbsp; Una vez alcanzada la fecha de inicio de la respectiva Etapa, los pronósticos NO pueden ser editados y quedarán validados de manera automática.</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+    {% include ('site_footer.html') %}
+    {% include ('site_upper.html') %}
+    {% include ('site_scripts.html') %}
+
+    <script>
+        function changePage(){
+            var page = document.getElementById("quinela_select").value;
+            window.location.href = '/proreview?quinela=' + page;
+        }
+    </script>
+
+    {% if fifa_stage %}
+
+    {%
+        if selected_quinela != 0
+    %}
+    <script src="assets/js/sort-list.js"></script>
+    <script src="assets/js/soccer.js"></script>
+    <script src="assets/js/validations.js"></script>
+    {% endif %}
+    {% endif %}
+</body>
+</html>

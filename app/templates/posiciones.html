@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+{% include ('site_header.html') %}
+{% include ('dt_header.html') %}
+
+<body id="page-top" style="background-image: url('/assets/img/concursopet.png'); height: 100vh;background-position:center right;">
+    <div id="wrapper" class=" bg-white vh-100" style="--bs-bg-opacity: .8;">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+
+                {% include ('site_navbar.html') %}
+
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Tabla de Posiciones Global - {{ app_config.app_name }}</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xl-12 mb-4">
+                            <div class="card shadow mb-4 bg-white bg-opacity-75">
+                                <div class="card-header py-3">
+                                    <p class="text-primary m-0 fw-bold">Tabla de Posiciones Global</p>
+                                </div>
+                                <div class="card-body table-responsive large">
+                                    <table id="rank_table" class="table table-light thead-dark table-striped table-bordered table-hover shadow">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="text-center">{{ app_config.app_quin }} #</th>
+                                                <th class="text-center">Puntos</th>
+                                                <th class="text-center">Posición</th>
+                                                <th class="text-center">Mías</th>                            
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% include ('site_footer.html') %}
+        </div>
+        {% include ('site_upper.html') %}
+    </div>
+    {% include ('site_scripts.html') %}
+    {% include ('dt_footer.html') %}
+    <script>
+        var table_data = {{ ranks | tojson }};
+        $(document).ready( function () {
+            $('#rank_table').DataTable({
+                data: table_data,
+                autoWidth: true,
+                responsive: true,
+                language: {
+                    "decimal":        "",
+                    "emptyTable":     "No hay información",
+                    "info":           "Mostrando _START_ a _END_ de _TOTAL_ {{ app_config.app_quin }}s",
+                    "infoEmpty":      "Mostrando 0 a 0 de 0 {{ app_config.app_quin }}s",
+                    "infoFiltered":   "(filtrado de _MAX_ {{ app_config.app_quin }}s totales)",
+                    "infoPostFix":    "",
+                    "thousands":      ",",
+                    "lengthMenu":     "Mostrando _MENU_ {{ app_config.app_quin }}s",
+                    "loadingRecords": "Cargando...",
+                    "processing":     "",
+                    "search":         "Buscar:",
+                    "zeroRecords":    "No se encontraron {{ app_config.app_quin }}s",
+                    "paginate": {
+                        "first":      "Primera",
+                        "last":       "Ultima",
+                        "next":       "Siguiente",
+                        "previous":   "Previa"
+                    },
+                    "aria": {
+                        "sortAscending":  ": activar para ordenar la columna ascendente",
+                        "sortDescending": ": activar para ordenar la columna descendente"
+                    }
+                },
+                columns: [
+                    { data: "tarjeta", className: "text-center" },
+                    { data: "total_points", render: function(datum, type, row){
+                        my_points = row.total_points
+                        my_progress = parseInt(my_points/250*100);
+                        return '<div class="progress"><div class="progress-bar bg-success progress-bar-striped" aria-valuenow="'+ my_points + '" aria-valuemin="0" aria-valuemax="250" style="width: ' + my_progress +  '%;"><span>' + my_points  + '</span></div></div>';
+                    }, className :"text-center" },
+                    { data: "position", className: "text-center" },
+                    { data: 0, render: function(datum, type, row){
+                        if (row.user_id == {{ user_id }}){
+                            return '<i class="bi bi-caret-left-square-fill"></i>';
+                        } else {
+                            return '';
+                        }
+                    }, className: "text-center" }
+                ],
+                "searching": false,
+                "order": [[ 2, "asc" ]],
+                "pageLength": 10,
+                "lengthMenu": [ 10, 25, 50, 75, 100 ],
+                "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                    if ( aData['user_id'] == {{ user_id }} ) {
+                        $(nRow).addClass('table-success');
+                    }
+                }
+            });
+        } );
+
+    </script>
+</body>
+
+</html>

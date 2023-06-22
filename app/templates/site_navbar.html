@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient shadow mb-4 sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="assets/img/app001_white.svg" width="32" > {{ app_config.app_name }}
+        </a>    
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#quinelanav" aria-controls="quinelanav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="quinelanav">
+            <!-- Edit
+            <ul class="navbar-nav me-auto mb-lg-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle no-arrow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-card-checklist"></i>&nbsp;Mis Pronósticos</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/proreview"><i class="bi bi-search"></i>&nbsp;Revisar Pronósticos</a></li>
+                        <li><a class="dropdown-item" href="/pronosticos"><i class="bi bi-pencil-square"></i>&nbsp;Ingresar Pronósticos</a></li>
+                    </ul>
+                </li>
+    
+                <li class="nav-item">
+                    <a class="nav-link" href="/posiciones">
+                        <i class="bi bi-people-fill"></i><span>&nbsp;Posiciones Global</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/canje">
+                        <i class="bi bi-ticket"></i><span>&nbsp;Canje de Pines</span>
+                    </a>
+                </li>    
+            </ul>
+            -->
+            <ul class="navbar-nav mr-0">
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle no-arrow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i>&nbsp;{{ user_data.fullname }}</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/user_details"><i class="bi bi-person-rolodex"></i>&nbsp;Perfil</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-left"></i>&nbsp;Salir</a></li>
+                </ul>
+                </li>
+            </ul>
+            {%
+                if user_data.is_verified
+            %}
+                <!-- REMOVE
+                <form class="d-flex needs-validation" id="canjeup">
+                    <div class="input-group mr-3">
+                        <input class="form-control" type="text" placeholder="Ingresar pin/clave..." aria-label="Canjear" aria-describedby="button-add" id="canjeupPin" required>
+                        <button class="btn btn-sm btn-outline-light" type="button" id="canjeupBtn">Canjear</button>
+                    </div>
+                </form>
+            -->
+            {% endif %}
+       </ul>
+
+        </div>
+    </div>
+</nav>

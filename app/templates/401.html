@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>HTML 401</title>    
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- Bootstrap 4.2.1 -->
+        <link href="/admin/static/bootstrap/bootstrap4/css/bootstrap.min.css?v=4.2.1" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="/assets/adminlte/plugins/fontawesome-free/css/all.min.css">
+        <link href="/admin/static/bootstrap/bootstrap4/css/font-awesome.min.css?v=4.7.0" rel="stylesheet">   
+        <style>
+            .hide {
+                display: none;
+            }
+        </style>    
+        <link href="{{ url_for('static', filename='css/bigmsg.css') }}" rel="stylesheet">
+    </head>
+    <body class="p-2">
+        <h1><i class="fas fa-user-secret"></i>&nbsp;HTML Error 401</h1>
+        <p class="lead">Unautohrized.</p>
+        <p class="lead">You are not authorized to access this page.</p>	
+        <div class="link">
+            <a href="/" class="btn btn-primary">Return to home</a>
+        </div>
+        <!-- Begin Image -->
+        <div class="box">
+            <i class="fas fa-user-secret"></i>
+        </div>    
+    </body>
+</html>
