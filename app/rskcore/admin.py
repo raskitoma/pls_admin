@@ -34,7 +34,6 @@ import flask_login as login
 import gettext
 from urllib import parse
 import email_validator
-from geoalchemy2 import Geometry
 from redis import Redis
 from flask_admin.actions import action
 from flask_admin.contrib import sqla, rediscli
