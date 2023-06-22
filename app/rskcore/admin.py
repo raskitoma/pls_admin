@@ -37,7 +37,6 @@ import email_validator
 from redis import Redis
 from flask_admin.actions import action
 from flask_admin.contrib import sqla, rediscli
-from flask_admin.contrib.geoa import ModelView as MapView
 from flask_admin.form import DateTimePickerWidget, fields as admin_fields, rules
 from flask_admin.model.template import TemplateLinkRowAction
 from flask_admin import helpers, expose, BaseView
