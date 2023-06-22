@@ -127,6 +127,9 @@ def validator_update():
     block_current = web3.eth.get_block_number()
     block_last_managed = pls_block_explorer.get_last()
     block_last_height = app.config['MAX_HEIGHT_CHECK'] if block_last_managed is None else block_last_managed.blockheight
+    # get pls current price, we don't need to much precision, it's good enough to get this price on this run for all withdrawals found
+    # and also is good to no stress and overload the API
+    price_usd = get_price(PLS_PRICE_URI, PLS_PRICE_API_KEY)
     # get wallets
     wallets = pls_wallets.get_all()
     for wallet in wallets:
@@ -141,8 +144,6 @@ def validator_update():
             if block_data.withdrawals:
                 for withdrawal in block_data.withdrawals:
                     if withdrawal['address'] == wallet.address:
-                        # since we found a trx, get the current price
-                        price_usd = get_price(PLS_PRICE_URI, PLS_PRICE_API_KEY)
                         log2store = f'Withdrawal found: {withdrawal["index"]}'
                         prGreen(f'\n{get_time()} | {log2store}')
                         w_index = int(withdrawal['index'])
@@ -193,7 +194,11 @@ def validator_update():
 def pls_custom_sync(xfrom, xto):
     # fire up web3
     web3 = Web3(Web3.HTTPProvider(app.config['WEB3_PROVIDER_URI']))
-    wallets = pls_wallets.get_all()
+    # get pls current price, we don't need to much precision, it's good enough to get this price on this run for all withdrawals found
+    # and also is good to no stress and overload the API
+    price_usd = get_price(PLS_PRICE_URI, PLS_PRICE_API_KEY)
+    # get wallets    
+    wallets = pls_wallets.get_all()    
     for wallet in wallets:
         log2store = f'Wallet {wallet.address} - Checking from block {xfrom} to {xto}'
         prYellow(f'{get_time()} | {log2store}')
@@ -205,8 +210,6 @@ def pls_custom_sync(xfrom, xto):
             if block_data.withdrawals:
                 for withdrawal in block_data.withdrawals:
                     if withdrawal['address'] == wallet.address:
-                        # since we found a trx, get the current price
-                        price_usd = get_price(PLS_PRICE_URI, PLS_PRICE_API_KEY)
                         log2store = f'Withdrawal found: {withdrawal["index"]}'
                         prGreen(f'\n{get_time()} | {log2store}')
                         w_index = int(withdrawal['index'])
