@@ -38,9 +38,9 @@ It's not the same as `first-sync`. This is to initialize the database and create
 
 Once up, initialize the database with:
 
-```python
-docker exec -it ppmcore python3 -m flask first-run
-docker exec -it ppmcore python3 -m flask db init
+```bash
+docker exec -it adminpls python3 -m flask first-run
+docker exec -it adminpls python3 -m flask db init
 ```
 
 > It will ask you to input **Proceed!** to continue and **y** to confirm. It also will create the admin user(`admin@rskcore.io`) with default password **admin**.
@@ -50,7 +50,7 @@ docker exec -it ppmcore python3 -m flask db init
 Just for the first time, you need to run the first sync. Do it with:
 
 ```bash
-docker exec -it ppmcore python3 -m flask first-sync
+docker exec -it adminpls python3 -m flask first-sync
 ```
 
 Once you're done with the first sync operation, you have to enable the cron task to keep the sync up to date.
@@ -60,28 +60,28 @@ Once you're done with the first sync operation, you have to enable the cron task
 To enable the cron task, you need to run:
 
 ```bash
-docker exec -it ppmcore enable_cron.sh
+docker exec -it adminpls enable_cron.sh
 ```
 
 To disable the cron task, you need to run:
 
 ```bash
-docker exec -it ppmcore disable_cron.sh
+docker exec -it adminpls disable_cron.sh
 ```
 
 ### Update admin user
 
 If you forgot your admin password, just run:
 
-```python
-docker exec -it ppmcore python3 -m flask update-admin
+```bash
+docker exec -it ppmcore adminpls -m flask update-admin
 ```
 
 > Follow the prompts and confirmation for new password.
 
 Next, if on defaults, you can access the web app at:
 
-```python
+```bash
 http://server:5000/admin
 ```
 
@@ -89,7 +89,7 @@ http://server:5000/admin
 
 For core upgrades, you can run:
 
-```python
+```bash
 ./restart_core.sh
 ```
 
@@ -101,14 +101,14 @@ For core upgrades, you can run:
 
 Every other update could require model changes. If you have not initialized the database, run the following command `docker exec -it ppmcore python3 -m flask db init`, otherwise run:
 
-```python
-docker exec -it ppmcore python3 -m flask db migrate
+```bash
+docker exec -it adminpls python3 -m flask db migrate
 ```
 
 Once you review the changes, run:
 
-```python
-docker exec -it ppmcore python3 -m flask db upgrade
+```bash
+docker exec -it adminpls python3 -m flask db upgrade
 ```
 
 Check any error output for possible issue tracking.

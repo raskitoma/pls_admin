@@ -1,9 +1,9 @@
 services:
-  rsk-core:
+  adminpls:
     build: .
-    image: rsk-core:v1
-    container_name: rsk-core
-    hostname: rsk-core
+    image: adminpls:v1
+    container_name: adminpls
+    hostname: adminpls
     restart: always
     ports:
       - 8123:5000

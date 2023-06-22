@@ -1,10 +1,10 @@
 # For staging purposes
 services:
-  rsk-core-stage:
+  adminpls-stage:
     build: .
-    image: rsk-core:v1
-    container_name: rsk-core-stage
-    hostname: rsk-core-stage
+    image: adminpls:v1
+    container_name: adminpls-stage
+    hostname: adminpls-stage
     restart: always
     ports:
       - 8124:5000
