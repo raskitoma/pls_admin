@@ -40,7 +40,6 @@ RUN pip3 install -r requirements.txt
 COPY *.py /app/
 COPY app /app/app
 COPY config /app/config
-COPY init_data /app/init_data
 
 # Exposing main port
 EXPOSE 5000
