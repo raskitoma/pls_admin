@@ -169,7 +169,12 @@ def validator_update():
                                 prRed(f'{get_time()} | SCHEDULER ==> {log2store}')                        
     # once all are reviewed, update last block managed
     try:
-        pls_block_explorer.new_block(block_current)
+        blockupdate = pls_block_explorer(
+            blockheight=block_current,
+            date=datetime.datetime.now()
+        )
+        db.session.add(blockupdate)
+        db.session.commit()
         log2store = f'Last block managed: {block_current}, updated {wallet_processed_qty} withdrawals'
         print(f'{get_time()} | {log2store}')
     except Exception as e:
