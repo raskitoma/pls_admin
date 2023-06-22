@@ -248,5 +248,6 @@ def pls_custom_sync(xfrom, xto):
 # ###############################################################################
 
 schedule.every().minute.do(pls_price_update)
-schedule.every(3).hours.do(wallets_review)
+schedule.every(15).minutes.do(wallets_review)
 schedule.every().hour.at(":15").do(validator_update)
+schedule.every().hour.at(":45").do(validator_update)
