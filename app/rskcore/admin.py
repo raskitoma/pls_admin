@@ -24,7 +24,7 @@ from .utl import generate_uuid, user_login, logout as user_logout, \
     get_data_from_response, new_log, \
     monthdiff, get_var_value
 from wtforms import form, fields, validators, widgets, TextAreaField, RadioField, ValidationError
-from jinja2 import Markup
+from markupsafe import Markup
 from .str_log import *
 import wtforms_json
 import logging
