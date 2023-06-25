@@ -24,7 +24,46 @@ Assuming you have already a proper *Docker* and *Docker Compose* installation, y
     docker-compose up
 ```
 
-### Grafana Dashboard
+### Network configuration
+
+There's a special section inside the docker-compose file to configure the network. You can set this at the end of the compose file as follows:
+
+```yaml
+networks:
+  master_network:
+    external: True
+```
+
+> This network must be configured previously with the proper subnet and gateway. You can do it with `docker network create -d bridge master_network`. More details [here](https://docs.docker.com/engine/reference/commandline/network_create/)
+
+Once you have a network created and the network declaration inside the compose file, you need to setup the network inside each container definition as follows:
+
+```yaml
+version: "3"
+services:
+  container:
+    image: image/name
+    restart: always
+    networks:           # This is the network configuration
+      - master_network  # Name is the same as the one you set at the end
+      # - Other_network
+      # - A_macvlan_network:
+      #     ipv4_address: 192.168.0.100
+    environment:
+      - ENV_VAR1=VALUE1
+    ports:
+      - 80:80
+
+# ...
+# Other containers, volume configurations, etc
+# ...
+
+networks:  # The network declaration as described above.
+  master_network:
+    external: True
+```
+
+## Grafana Dashboard
 
 There's a Grafana dashboard, you can import it from the extras folder. It's designed to work with the PLS grabber, so you need to setup the datasource and the variables as well.
 
