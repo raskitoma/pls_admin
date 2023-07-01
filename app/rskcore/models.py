@@ -387,25 +387,37 @@ class pls_wallet_history(db.Model):
     address = db.Column('address', db.String(100), db.ForeignKey('pls_wallets.address'), nullable = False)
     balance = db.Column('balance', db.Float, nullable = False)
     date = db.Column('date', db.DateTime, nullable = False)
+    priceUSD = db.Column('priceUSD', db.Float, nullable = False)
+    priceFX = db.Column('priceFX', db.Float, nullable = False)
+    taxableIncomeUSD = db.Column('taxableIncomeUSD', db.Float, nullable = False)
+    taxableIncomeFX = db.Column('taxableIncomeFX', db.Float, nullable = False)
     
-    def __init__(self, address, balance, date):
+    def __init__(self, address, balance, date, priceUSD, priceFX, taxableIncomeUSD, taxableIncomeFX):
         self.address = address
         self.balance = balance
         self.date = date
+        self.priceUSD = priceUSD
+        self.priceFX = priceFX
+        self.taxableIncomeUSD = taxableIncomeUSD
+        self.taxableIncomeFX = taxableIncomeFX
     
     def __repr__(self):
-        return f'{self.address} - {self.balance} - {self.date}'
+        return f'{self.address} - {self.balance} - {self.date} - {self.priceUSD} - {self.priceFX} - {self.taxableIncomeUSD}- {self.taxableIncomeFX}'
     
     @staticmethod
     def get_all():
         return pls_wallet_history.query.all()
     
     @staticmethod
-    def new_balance(address, balance):
+    def new_balance(address, balance, price_usd, price_fx, taxableIncome_usd, taxableIncome_fx):
         my_balance = pls_wallet_history(
             address = address,
             balance = balance,
             date = datetime.now(),
+            priceUSD = price_usd,
+            priceFX = price_fx,
+            taxableIncomeUSD = taxableIncome_usd,
+            taxableIncomeFX = taxableIncome_fx
         )
         db.session.add(my_balance)
         db.session.commit()
@@ -418,21 +430,23 @@ class pls_price(db.Model):
     id = db.Column('id', db.Integer, primary_key = True)
     date = db.Column('date', db.DateTime, nullable = False)
     priceUSD = db.Column('priceUSD', db.Float, nullable = False)
+    priceFX = db.Column('priceFX', db.Float, nullable = False)
     
-    def __init__(self, date, priceUSD):
+    def __init__(self, date, priceUSD, priceFX):
         self.date = date
         self.priceUSD = priceUSD
+        self.priceFX = priceFX
         
     def __repr__(self):
-        return f'{self.date} - {self.priceUSD}'
+        return f'{self.date} - {self.priceUSD} - {self.priceFX}'
     
     @staticmethod
     def get_last():
         return pls_price.query.order_by(pls_price.date.desc()).first()
     
     @staticmethod
-    def store_new_price(value):
-        new_price = pls_price(datetime.now(), value)
+    def store_new_price(valueUSD, valueFX):
+        new_price = pls_price(datetime.now(), valueUSD, valueFX)
         db.session.add(new_price)
         db.session.commit()
     
@@ -477,8 +491,9 @@ class pls_validator_withdrawals(db.Model):
     amount = db.Column('amount', db.Float, nullable = False)
     timeStamp = db.Column('timeStamp', db.DateTime, nullable = False)
     priceUSD = db.Column('priceUSD', db.Float, nullable = True)
+    priceFX = db.Column('priceFX', db.Float, nullable = False)
     
-    def __init__(self, index, validatorIndex, blockNumber, address, miner, amount, timeStamp, priceUSD):
+    def __init__(self, index, validatorIndex, blockNumber, address, miner, amount, timeStamp, priceUSD, priceFX):
         self.index = index
         self.validatorIndex = validatorIndex
         self.blockNumber = blockNumber
@@ -487,9 +502,10 @@ class pls_validator_withdrawals(db.Model):
         self.amount = amount
         self.timeStamp = timeStamp
         self.priceUSD = priceUSD
+        self.priceFX = priceFX
         
     def __repr__(self):
-        return f'{self.index} - {self.validatorIndex} - {self.blockNumber} - {self.address} - {self.miner} - {self.amount} - {self.timeStamp} - {self.priceUSD}'
+        return f'{self.index} - {self.validatorIndex} - {self.blockNumber} - {self.address} - {self.miner} - {self.amount} - {self.timeStamp} - {self.priceUSD} -{self.priceFX}'
     
     @staticmethod
     def get_all():
