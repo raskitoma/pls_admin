@@ -12,8 +12,7 @@
 # ###############################################################################
 
 import os
-import schedule
-import datetime, time
+import datetime
 import requests
 import json
 from app import create_app
@@ -240,14 +239,3 @@ def pls_custom_sync(xfrom, xto):
                             log2store = f"{get_time()} | Error storing withdrawal in db: {str(e)}"
                             prRed(f'{get_time()} | SCHEDULER ==> {log2store}')                        
 
-                                    
-# ###############################################################################
-# ###############################################################################
-# setting up scheduler
-# ###############################################################################
-# ###############################################################################
-
-schedule.every(10).minutes.do(pls_price_update)
-schedule.every(15).minutes.do(wallets_review)
-schedule.every().hour.at(":15").do(validator_update)
-schedule.every().hour.at(":45").do(validator_update)

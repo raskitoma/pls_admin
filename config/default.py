@@ -149,3 +149,15 @@ PLS_PRICE_API_KEY="jajajajajaja-jajajajajaja-jajajajajaja"
 WEB3_PROVIDER_URI="https://rpc.pulsechain.com"
 MAX_HEIGHT_CHECK = 17530000
 # EoF
+
+# base broker config
+REDIS_HOST = 'redis'
+REDIS_BROKER_URL = f'redis://{REDIS_HOST}:6379'
+REDIS_RESULT_BACKEND = f'redis://{REDIS_HOST}:6379'
+
+# celery config
+CELERY_TASK_RESULT_EXPIRES = 30
+CELERY_TIMEZONE = APP_TIMEZONE
+CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

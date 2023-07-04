@@ -15,6 +15,16 @@ services:
     # networks:
     #   master_network: # this is the network name
 
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    restart: always
+    ports:
+      - 6379:6379
+#    networks:
+#      - master_network
+
 # setup other packages/services like db, proxy reverse, etc.
 # setup network if required look at the "networks" section above
 # networks:

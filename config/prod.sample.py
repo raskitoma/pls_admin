@@ -20,6 +20,8 @@ FLASK_ADMINLTE_LAYOUT_OPTIONS = [
 
 # PUT OTHER VARS HERE REFER TO default.py FOR EXAMPLES
 
+# TIME ZONE
+APP_TIMEZONE = 'America/New_York'
 
 # Values for PLS Grabber
 CHAIN_URI="https://scan.pulsechain.com/api"
@@ -29,5 +31,15 @@ PLS_PRICE_API_KEY="my-coinmarketcap-api-key"
 WEB3_PROVIDER_URI="https://rpc.pulsechain.com"
 ADMIN_GRAFANA_URL = 'https://mygrafana.com'
 MAX_HEIGHT_CHECK = 17530000 # use a reasonable height... first sync will take a while
+
+
+# base broker config
+REDIS_HOST = 'redis'
+REDIS_BROKER_URL = f'redis://{REDIS_HOST}:6379'
+REDIS_RESULT_BACKEND = f'redis://{REDIS_HOST}:6379'
+
+# celery config
+CELERY_TASK_RESULT_EXPIRES = 30
+CELERY_TIMEZONE = APP_TIMEZONE
 
 # EoF

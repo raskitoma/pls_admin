@@ -38,13 +38,17 @@ COPY requirements.txt /app/requirements.txt
 RUN pip3 install -r requirements.txt
 
 # copying required files
+COPY entrypoint.sh /app/
 COPY *.py /app/
 COPY app /app/app
 COPY config /app/config
 COPY scheduler /app/scheduler
 
+# setting permissions to entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Exposing main port
 EXPOSE 5000
 
 # Startup
-CMD [ "python3", "-m", "flask", "run","--host","0.0.0.0","--port","5000"]
+CMD ["./entrypoint.sh"]

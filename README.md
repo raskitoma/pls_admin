@@ -84,6 +84,29 @@ docker exec -it adminpls python3 -m flask db init
 
 > It will ask you to input **Proceed!** to continue and **y** to confirm. It also will create the admin user(`admin@rskcore.io`) with default password **admin**.
 
+### Scheduler Config
+
+Once you have the first run done, you must setup your schedules as follows:
+
+1. Enter the application and go to `System > Scheduler`. Once ther, click on `Create`. You will see the following form:
+![Task Creation Example](/extras/task_creation_example.png)
+
+2. You need to select a Task from the list, set a cron (Go to [crontab.guru](https://crontab.guru/) for help) and set the `Active` checkbox if you want that schedule to be active.
+
+3. Once you're done, click on `Save` and you will see the task in the list as follows:
+![Task Created Example](/extras/task_created_example.png)
+
+> By default, the form will show the `Active` checkbox as unchecked. This is to allow you to create the task and then activate it later.
+
+> For now there are only 3 tasks avaliable: pls_pu(Price Update, suggestion: each 10 minutes), pls_wr(Wallet Review, updates wallets balances, suggestion: each 15 minutes) and pls_vu(Validator Updates, updates validators info, suggestion: every hour at minutes 15 and 45)
+
+Cron examples for the 3 tasks above:
+```cron
+*/10 * * * *
+*/15 * * * *
+15,45 * * * *
+```
+
 ### First sync
 
 Just for the first time, you need to run the first sync. Do it with:
@@ -94,19 +117,7 @@ docker exec -it adminpls python3 -m flask first-sync
 
 Once you're done with the first sync operation, you have to enable the cron task to keep the sync up to date.
 
-### Enable/Disable cron task
-
-To enable the cron task, you need to run:
-
-```bash
-docker exec -it adminpls enable_cron.sh
-```
-
-To disable the cron task, you need to run:
-
-```bash
-docker exec -it adminpls disable_cron.sh
-```
+## Extra config and troubleshooting
 
 ### Update admin user
 
@@ -123,6 +134,17 @@ Next, if on defaults, you can access the web app at:
 ```bash
 http://server:5000/admin
 ```
+
+### Scheduler reset
+
+If for some reason you need to reset the scheduler, you can do it with:
+
+```bash
+docker exec -it adminpls python3 -m flask scheduler-reset
+```
+
+> Take note that this will delete any configured schedules.
+> This is also useful if you need to add new functions in the future.
 
 ## Upgrade
 

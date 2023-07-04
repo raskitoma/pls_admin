@@ -25,7 +25,6 @@ PyJWT==2.4.0
 redis==4.5.4
 requests==2.31.0
 rfc5424-logging-handler==1.4.3
-schedule==1.2.0
 shapely==2.0.1
 SQLAlchemy==1.4.44
 web3==6.4.0

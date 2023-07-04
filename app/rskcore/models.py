@@ -512,3 +512,77 @@ class pls_validator_withdrawals(db.Model):
         return pls_validator_withdrawals.query.filter_by(priceUSD=None).all()
     
         
+class task_list(db.Model):
+    '''
+    Task list table
+    '''
+    __tablename__ = 'task_list'
+    id = db.Column('id', db.Integer, primary_key = True)
+    task_name = db.Column('task_name', db.String(100), nullable = False)
+    task_description = db.Column('task_description', db.String(100), nullable = True)
+    task_type = db.Column('task_type', db.String(100), nullable = False)
+
+    def __init__(self, task_name, task_description, task_type):
+        self.task_name = task_name
+        self.task_description = task_description
+        self.task_type = task_type
+
+    def __repr__(self):
+        return f'{self.task_name} - {self.task_description} - {self.task_type}'
+
+    @staticmethod
+    def get_all():
+        return task_list.query.all()
+
+    @staticmethod
+    def get_model(name):
+        return task_list.query.filter_by(task_name=name).first()
+
+class task_scheduler(db.Model):
+    '''
+    Task scheduler table
+    '''
+    __tablename__ = 'task_scheduler'
+    id = db.Column('id', db.Integer, primary_key = True)
+    task_id = db.Column('task_id', db.Integer, db.ForeignKey('task_list.id'), nullable = False)
+    task_rel = db.relationship('task_list', backref=db.backref('task_scheduler', lazy=True))
+    task_cron = db.Column('task_cron', db.String(100), nullable = False)
+    task_active = db.Column('task_active', db.Boolean, nullable = False, default = True)
+    task_worker_id = db.Column('task_worker_id', db.Text, nullable = True)
+    task_last_run = db.Column('task_last_run', db.DateTime, nullable = True)
+
+    def __init__(self, task_id, task_cron, task_active, task_worker_id, task_last_run):
+        self.task_id = task_id
+        self.task_cron = task_cron
+        self.task_active = task_active
+        self.task_worker_id = task_worker_id
+        self.task_last_run = task_last_run
+
+    def __repr__(self):
+        return f'{self.task_id} - {self.task_cron} - {self.task_active}'
+
+    @staticmethod
+    def get_all():
+        return task_scheduler.query.all()
+
+    @staticmethod
+    def get_one_by_id(id):
+        return task_scheduler.query.filter_by(id=id).first()
+    
+    @staticmethod
+    def get_one_by_worker_id(worker_id):
+        return task_scheduler.query.filter_by(task_worker_id=worker_id).first()
+    
+    @staticmethod
+    def get_task_by_name(name):
+        task_id = task_list.query.filter_by(task_name=name).first()
+        return task_scheduler.get_one_by_id(task_id.id)
+
+    @staticmethod
+    def get_active():
+        return task_scheduler.query.filter_by(task_active=True).all()
+    
+    @staticmethod
+    def get_inactive():
+        return task_scheduler.query.filter_by(task_active=False).all()
+

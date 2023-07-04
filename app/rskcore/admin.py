@@ -20,6 +20,7 @@ from app import db, adminlte, datetime, init_login, \
 from .models import Users, master_config
 from .models import logs, sysalerts
 from .models import pls_wallets
+from .models import task_scheduler, task_list
 from .utl import generate_uuid, user_login, logout as user_logout, \
     get_data_from_response, new_log, \
     monthdiff, get_var_value
@@ -42,6 +43,7 @@ from flask_admin.model.template import TemplateLinkRowAction
 from flask_admin import helpers, expose, BaseView
 from flask_admin.menu import MenuLink, MenuView, BaseMenu
 from werkzeug.security import generate_password_hash, check_password_hash
+from ..scheduler import get_tasks
 
 # Defining constants
 C_LOGIN_VIEW = '.login_view'
@@ -221,8 +223,10 @@ class tasks(BaseView):
             return redirect(url_for(C_INDEX_VIEW))
         # check if have been called via POST
         if request.method == 'GET':
-            self._template_args['active_tasks'] = {}
-            self._template_args['inactive_tasks'] = {}
+            active_tasks = get_tasks() or {}
+            inactive_tasks = get_tasks(mode='disabled') or {}
+            self._template_args['active_tasks'] = active_tasks
+            self._template_args['inactive_tasks'] = inactive_tasks
             set_template_objects(self)
             return self.render('myadmin3/tasks.html')
 
@@ -810,6 +814,81 @@ class ModelPLSWallets(sqla.ModelView):
         new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_DELETE}', data=log2store, image=None)
         return super().delete_model(model)
 
+
+# ###############################
+# Class for Tasks Scheduler
+class ModelCroner(sqla.ModelView):
+    list_template = 'myadmin3/admin_std_list.html'
+    create_modal = myconfig['ADMIN_MODAL']
+    edit_modal = myconfig['ADMIN_MODAL']
+    extra_js = []
+    can_set_page_size = True
+    column_searchable_list = []
+    column_list = ['task_rel', 'task_cron', 'task_active']
+    column_exclude_list = []
+    column_editable_list = ['task_active']
+    column_filters = ['task_rel', 'task_cron', 'task_active']
+    form_excluded_columns = ['task_worker_id', 'task_last_run']    
+    form_widget_args = {}
+    column_labels = {
+        'task_rel': 'Task Name',
+        'task_cron': 'Cron Like Schedule',
+        'task_last_run': 'Last Run',
+    }
+    form_overrides = {
+    }
+    form_extra_fields = {
+        'task_rel' : sqla.fields.QuerySelectField('Task Name', query_factory=lambda: task_list.get_all(), allow_blank=False, blank_text='(Select a Task)'),
+        'task_cron' : fields.StringField('Cron Schedule', validators=[validators.DataRequired()]),
+        'task_active' : fields.BooleanField('Active?', default=False),
+    }
+        
+    def is_accessible(self):
+        set_template_objects(self)
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+    @property
+    def can_create(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+    # disabled editing
+    @property        
+    def can_edit(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+    @property        
+    def can_delete(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+    # editing form actions to save log
+    def create_model(self, form):
+        log2store = LOG_CREATE % (login.current_user.email, form.data)
+        logger.info(log2store)
+        new_log(users_id=login.current_user.id, module=self.name, severity=SEV_INF, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_CREATE}', data=log2store, image=None)
+        new_task = task_scheduler(
+            task_id=form.data['task_rel'].id,
+            task_cron=form.data['task_cron'],
+            task_active=form.data['task_active'],
+            task_worker_id=None,
+            task_last_run=None
+        )
+        self.session.add(new_task)
+        self.session.commit()
+        return self.session.query(self.model)
+        
+    def update_model(self, form, model):
+        log2store = LOG_CHANGE % (login.current_user.email, model, form.data)
+        logger.info(log2store)
+        new_log(users_id=login.current_user.id, module=self.name, severity=SEV_INF, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_CHANGE}', data=log2store, image=None)
+        return super().update_model(form, model)
+    
+    def delete_model(self, model):
+        log2store = LOG_DELETE % (login.current_user.email, model)
+        logger.warning(log2store)
+        new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_DELETE}', data=log2store, image=None)
+        return super().delete_model(model)
+
+
 # ###############################
 # Admin Initialization
 # ###############################
@@ -825,6 +904,7 @@ myadmin = admin.Admin(app, name=app.config['ADMIN_NAME'], index_view=MyAdminInde
 CAT_INDENT = ' > '
 CAT_PLS = 'Pulse'
 CAT_SYST = 'System'
+CAT_TASK = CAT_SYST + ' - Tasks'
 
 # ###############################
 # Adding admin objects
@@ -838,6 +918,10 @@ myadmin.add_view(ModelConfigVars(master_config, db.session, name='Config VARS', 
 myadmin.add_view(ModelLogs(logs, db.session, name=' User Logs', category=CAT_SYST, menu_icon_type='fas', menu_icon_value='fa-clipboard-list', menu_class_name='navbar-navy'))
 myadmin.add_view(ModelAlertsUser(sysalerts, db.session, endpoint='myalerts', name=' My Alerts', category=CAT_SYST, menu_icon_type='fas', menu_icon_value='fa-bell', menu_class_name='navbar-navy'))
 myadmin.add_view(ModelAlertsAdmin(sysalerts, db.session, endpoint='sysalerts', name=' Users Alerts', category=CAT_SYST, menu_icon_type='fas', menu_icon_value='fa-exclamation-triangle', menu_class_name='navbar-navy'))
+myadmin.add_sub_category(name=CAT_TASK, parent_name=CAT_SYST)
+myadmin.add_view(ModelCroner(task_scheduler, db.session, name='Scheduler', category=CAT_TASK, menu_icon_type='fas', menu_icon_value='fa-cog', menu_class_name='navbar-navy'))
+myadmin.add_view(tasks(name='Status', category=CAT_TASK, menu_icon_type='fas', menu_icon_value='fa-tasks', menu_class_name='navbar-navy'))
+myadmin.add_view(RedisConsole(Redis(myconfig['REDIS_HOST']), name='Redis CLI', category=CAT_TASK))
 
 #############################################
 # EoF

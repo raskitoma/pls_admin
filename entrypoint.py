@@ -1,6 +1,7 @@
 # RSK - Core
 # 2023 (c) All rights reserved
 # by Raskitoma.com/Raskitoma.io
+import json
 import os
 from werkzeug.security import generate_password_hash
 
@@ -79,31 +80,56 @@ def init_db():
         print('Database initialization aborted')
         exit()
     # fils db with initial data
+    schedules_data = json.load(open('scheduler/config.json'))
+    for scheduler_task in schedules_data:
+        new_task = task_list(
+            task_name = scheduler_task['task_name'],
+            task_description=scheduler_task['task_description'],
+            task_type=scheduler_task['task_type']
+        )
+        db.session.add(new_task)    
     # lets check if admin exists, if not create it
     adminio = Users.query.filter_by(email=DEFAULT_ADMIN_NAME).first()
     if adminio is None:
         print (f'Admin does not exist, creating {DEFAULT_ADMIN_NAME} with default password...')
         admin_create(DEFAULT_ADMIN_NAME, 'admin')
-        
     db.session.commit()    
-    
     print('Database initialization complete!')
 
-
-# Scheduler    
-@app.cli.command('scheduler')
-def scheduler():
-    from scheduler.tasks import schedule, time
-    prGreen(f'{get_time()} | SCHEDULER ====================>>> Scheduler started')
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+# Scheduler
+@app.cli.command('scheduler-reset')
+def scheduler_reset():
+    print('Scheduler restore procedure...')
+    print('Current scheduler data will be deleted and recreated from scratch')
+    print('All schedule data will be lost!')
+    print('Database URI: ' + str(db.engine.url))
+    lets_proceed = click.prompt('This is a destructive operation, to proceed you must type "Proceed!"', default='Abort', show_default=True)
+    if lets_proceed != 'Proceed!':
+        print('Schedule re-initialization aborted')
+        exit()
+    lets_proceed = click.confirm('Are you sure you want to initialize the schedule?', abort=True)
+    if lets_proceed:
+        db.session.execute('TRUNCATE TABLE task_scheduler CASCADE')
+        db.session.execute('TRUNCATE TABLE task_list CASCADE')
+        schedules_data = json.load(open('scheduler/config.json'))
+        for scheduler_task in schedules_data:
+            new_task = task_list(
+                task_name = scheduler_task['task_name'],
+                task_description=scheduler_task['task_description'],
+                task_type=scheduler_task['task_type']
+            )
+            db.session.add(new_task)
+        db.session.commit()
+        print ('Scheduler reset complete!')
+    else:
+        print('Scheduler re-initialization aborted')
+        exit()
 
 # First-run sync
 @app.cli.command('first-sync')
 def firstsync():
     prGreen(f'{get_time()} | FIRST-SYNC ====================>>> First sync started')
-    from scheduler.tasks import validator_update, wallets_review, pls_price_update
+    from app.scheduler_tasks import validator_update, wallets_review, pls_price_update
     pls_price_update()
     wallets_review()
     validator_update()
@@ -119,7 +145,7 @@ def firstsync(xfrom, xto):
     if xfrom < xto:
         prRed(f'{get_time()} | First parameter must be greater than second')
         exit()
-    from scheduler.tasks import pls_custom_sync
+    from app.scheduler_tasks import pls_custom_sync
     pls_custom_sync(xfrom, xto)
     
 

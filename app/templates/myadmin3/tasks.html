@@ -13,9 +13,9 @@
                 <tr>
                     <th>Task ID</th>
                     <th>Name</th>
-                    <th>Args</th>
-                    <th>Worker</th>
                     <th>State</th>
+                    <th>Status</th>
+                    <th>Result</th>
                     <th>Last run</th>
                 </tr>
             </thead>
@@ -24,9 +24,9 @@
                 <tr>
                     <td>{{ task.task_id }}</td>
                     <td>{{ task.task_name }}</td>
-                    <td>{{ task.task_args }}</td>
-                    <td>{{ task.task_worker }}</td>
                     <td>{{ task.task_state }}</td>
+                    <td>{{ task.task_status }}</td>
+                    <td>{{ task.task_result }}</td>
                     <td>{{ task.task_last_run }}</td>
                 </tr>
             {% endfor %}
@@ -44,19 +44,21 @@
                 <tr>
                     <th>Task ID</th>
                     <th>Name</th>
-                    <th>Args</th>
-                    <th>ETA</th>
-                    <th>Worker</th>
+                    <th>State</th>
+                    <th>Status</th>
+                    <th>Result</th>
+                    <th>Last run</th>
                 </tr>
             </thead>
             <tbody>
-                {% for task in inactive_tasks %}
+            {% for task in inactive_tasks %}
                 <tr>
                     <td>{{ task.task_id }}</td>
                     <td>{{ task.task_name }}</td>
-                    <td>{{ task.task_args }}</td>
-                    <td>{{ task.task_worker }}</td>
                     <td>{{ task.task_state }}</td>
+                    <td>{{ task.task_status }}</td>
+                    <td>{{ task.task_result }}</td>
+                    <td>{{ task.task_last_run }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -71,7 +73,6 @@
     $(document).ready(function() {
         $('#task_active').DataTable();
         $('#task_scheduled').DataTable();
-        $('#task_reserved').DataTable();
     });
 </script>
 {% endblock %}
