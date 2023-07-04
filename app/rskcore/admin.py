@@ -824,7 +824,7 @@ class ModelCroner(sqla.ModelView):
     extra_js = []
     can_set_page_size = True
     column_searchable_list = []
-    column_list = ['task_rel', 'task_cron', 'task_active']
+    column_list = ['task_rel', 'task_cron', 'task_active', 'task_last_run', 'task_worker_id']
     column_exclude_list = []
     column_editable_list = ['task_active']
     column_filters = ['task_rel', 'task_cron', 'task_active']

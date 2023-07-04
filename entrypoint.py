@@ -148,5 +148,16 @@ def firstsync(xfrom, xto):
     from app.scheduler_tasks import pls_custom_sync
     pls_custom_sync(xfrom, xto)
     
-
+# if __name__ == '__main__':
+#     from app.scheduler import celery
+#     application = current_app._get_current_object()
+#     worker = celery.Worker(app=application)
+#     options = {
+#         'broker': app.config['REDIS_BROKER_URL'],
+#         'loglevel': 'INFO',
+#         'traceback': True,
+#         'beat': True
+#     }
+#     worker.run(**options)
+    
 # EoF
