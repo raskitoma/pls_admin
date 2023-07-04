@@ -107,6 +107,8 @@ Cron examples for the 3 tasks above:
 15,45 * * * *
 ```
 
+> IMPORTANT: Rembember to restart the containers each time you edit a task. I will change this on the future.
+
 ### First sync
 
 Just for the first time, you need to run the first sync. Do it with:
