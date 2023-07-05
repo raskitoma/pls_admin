@@ -223,4 +223,6 @@ If for any reason this project adds a new periodic task, it will be necessary to
 
 ## Code quality status
 
+[![Quality Gate Status](https://sonarqube.raskitoma.com/api/project_badges/measure?project=raskitoma_pls_admin_AYkmoPDRvCkTqDPs79mW&metric=alert_status&token=sqb_7b276159d93cbcda10bb05b2a8aa9a1f8d70d271)](https://sonarqube.raskitoma.com/dashboard?id=raskitoma_pls_admin_AYkmoPDRvCkTqDPs79mW)
+
 > wip - raskitoma.io
