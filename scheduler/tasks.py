@@ -116,8 +116,16 @@ def wallets_review():
                 #print(f'{balance_diff}')
                 if float(current_balance) != previous_balance:
                     if float(current_balance) > previous_balance:
-                        taxableIncome_USD = (float(current_balance) - previous_balance) * price_usd
-                        taxableIncome_FX = (float(current_balance) - previous_balance) * price_fx
+                        balance_increase = float(current_balance) - previous_balance
+                        if balance_increase < 32000000:
+                            #increase in balance from validator rewards and/or fee recipient tips/rewards
+                            taxableIncome_USD = balance_increase * price_usd
+                            taxableIncome_FX = balance_increase * price_fx
+                        else:
+                            #increase in balance caused by exiting validator/s with or without validator
+                            #rewards and/or fee recipient tips/rewards
+                            taxableIncome_USD = (balance_increase - (balance_increase//32000000 * 32000000)) * price_usd
+                            taxableIncome_FX = (balance_increase - (balance_increase//32000000 * 32000000)) * price_fx
                     else:
                         taxableIncome_USD = 0
                         taxableIncome_FX = 0
