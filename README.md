@@ -103,6 +103,12 @@ Assuming you have a proper *Docker* and *Docker Compose* installation, and your 
 
 Once up, you need to run some commands to initialize the database, admin user, scheduler and other stuff.
 
+Next, if you have all running on default settings, you can access the web app at:
+
+```bash
+http://server:5000/admin
+```
+
 ### First run
 
 It's not the same as `first-sync`. This is to initialize the database and create the admin user.
@@ -114,11 +120,9 @@ docker exec -it adminpls python3 -m flask first-run
 docker exec -it adminpls python3 -m flask db init
 ```
 
-> It will ask you to input **Proceed!** to continue and **y** to confirm. It also will create the admin user(`admin@rskcore.io`) with default password **admin**. This also will populate the tasks definition table with the default tasks so you can be able to setup the scheduler.
+> It will ask you to input **Proceed!** to continue and **y** to confirm. It will create the admin user(`admin@rskcore.io`) with default password **admin**, and populate the tasks definition table with the default tasks so you can be able to setup the scheduler.
 
-**About the Scheduler**
-
->If the scheduler doesn't shows any tasks to be configured it's because the task initialization was skipped. You can solve this by running `docker exec -it adminpls python3 -m flask scheduler-reset`. Remember that this will delete any configured schedules.
+IMPORTANT: Right now there's no way to change the admin password, your best option to change it is using the **Admin Password Reset** option [below](#admin-password-reset).
 
 ### Scheduler Config
 
@@ -136,6 +140,8 @@ Once you have the first run done, you must setup your schedules as follows:
 15,45 * * * *  # This is for the Validator Update task, it will run every hour at minutes 15 and 45.
 ```
 
+> If there's no tasks available from the **Task Name** dropdown, you need to run the [Scheduler Reset Task](#scheduler-reset) and restart the containers.
+
 3. Once you're done, click on `Save` and you will see the task in the list as follows:
 
 ![Task Created Example](/extras/task_created_example.png)
@@ -146,21 +152,23 @@ Once you have the first run done, you must setup your schedules as follows:
 
 Right now there are only 3 tasks avaliable: pls_pu(Price Update, suggestion: each 10 minutes), pls_wr(Wallet Review, updates wallets balances, suggestion: each 15 minutes) and pls_vu(Validator Updates, updates validators info, suggestion: every hour at minutes 15 and 45)
 
-> IMPORTANT: Rembember to restart the containers each time you edit a task. I will change this on the future.
+> IMPORTANT: Rembember to restart the containers each time you edit a task. I will change this some day.
 
 ### First sync
 
-Just for the first time, you need to run the first sync. Do it with:
+For the first time, you need to run the first sync. Do it with:
 
 ```bash
 docker exec -it adminpls python3 -m flask first-sync
 ```
 
+This operation could take a while to finishs, it depends on the number of blocks to sync.
+
 Once you're done with the first sync operation, you have to enable all the tasks in the scheduler to keep the sync up to date.
 
 ## Extra config and troubleshooting
 
-### Update admin user
+### Admin Password Reset
 
 If you forgot your admin password, just run:
 
@@ -170,13 +178,7 @@ docker exec -it ppmcore adminpls -m flask update-admin
 
 > Follow the prompts and confirmation for new password.
 
-Next, if on defaults, you can access the web app at:
-
-```bash
-http://server:5000/admin
-```
-
-### Scheduler reset
+### Scheduler Reset
 
 If for some reason you need to reset the scheduler, you can do it with:
 
@@ -214,6 +216,10 @@ docker exec -it adminpls python3 -m flask db upgrade
 ```
 
 Check any error output for possible issue tracking.
+
+### Task changes
+
+If for any reason this project adds a new periodic task, it will be necessary to run the [Scheduler Reset](#scheduler-reset) command.  This will delete all the current scheduled task, so you'll need to backup and recreate them.
 
 ## Code quality status
 
