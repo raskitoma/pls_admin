@@ -535,7 +535,7 @@ class pls_validator_withdrawals(db.Model):
     @staticmethod
     def get_not_in_share_by_wallet(wallet):
         # get all wallet withdrawals not in pls_share_details by its blockNumber
-        return pls_validator_withdrawals.query.filter(pls_validator_withdrawals.blockNumber.notin_(db.session.query(pls_share_details.blockNumber).filter_by(wallet=wallet))).all()
+        return pls_validator_withdrawals.query.filter(pls_validator_withdrawals.blockNumber.notin_(db.session.query(pls_share_details.blockNumber).filter_by(pls_wallet_payer=wallet))).all()
            
         
 class task_list(db.Model):
@@ -631,17 +631,17 @@ class pls_share_seq(db.Model):
         return f'{self.index} - {self.timeStamp} - {self.pls_address} - {self.pls_sequence}'
     
     @staticmethod
-    def new_sequence(pls_address):
+    def new_sequence(pls_address, tailer):
         wallet = pls_wallets.get_one_by_address(pls_address)
         try:
             owner = wallet.owner
             timeStamp = datetime.now()
             # create a sequence string using this format: <wallet_owner>_<YYYY/MM/DD>
-            sequence_string = f'{owner}_{timeStamp.strftime("%Y/%m/%d")}'
+            sequence_string = f'{owner}_{timeStamp.strftime("%Y/%m/%d")}_{tailer}'
             my_sequence = pls_share_seq(timeStamp, pls_address, sequence_string)
             db.session.add(my_sequence)
             db.session.commit()
-            return sequence_string
+            return my_sequence
         except Exception as e:
             return None            
 
@@ -662,6 +662,7 @@ class pls_share(db.Model):
     share_sequence = db.Column('share_sequence', db.Integer, db.ForeignKey('pls_share_idx.index'), nullable = True)
     timeStamp = db.Column('timeStamp', db.DateTime, nullable = False)
     pls_wallet_payer = db.Column('pls_wallet_payer', db.String(100), nullable = False)
+    pls_wihdrawed = db.Column('pls_wihdrawed', db.Float, nullable = False)
     pls_payable_amount = db.Column('pls_payable_amount', db.Float, nullable = False)
     trx_pay_date = db.Column('trx_pay_date', db.DateTime, nullable = True)
     trx_hash = db.Column('trx_hash', db.String(100), nullable = True)
@@ -670,10 +671,11 @@ class pls_share(db.Model):
     approved = db.Column('approved', db.Boolean, nullable = False, default = True)
     paid = db.Column('paid', db.Boolean, nullable = False, default = False)
     
-    def __init__(self, share_sequence, timeStamp, pls_wallet_payer, pls_payable_amount, trx_pay_date, trx_hash, priceUSD, priceFX, approved, paid):
+    def __init__(self, share_sequence, timeStamp, pls_wallet_payer, pls_withdrawed, pls_payable_amount, trx_pay_date, trx_hash, priceUSD, priceFX, approved, paid):
         self.share_sequence = share_sequence
         self.timeStamp = timeStamp
         self.pls_wallet_payer = pls_wallet_payer
+        self.pls_wihdrawed = pls_withdrawed
         self.pls_payable_amount = pls_payable_amount
         self.trx_pay_date = trx_pay_date
         self.trx_hash = trx_hash
@@ -683,11 +685,11 @@ class pls_share(db.Model):
         self.paid = paid
     
     def __repr__(self):
-        return f'{self.index} - {self.share_sequence} - {self.timeStamp} - {self.pls_wallet_payer} - {self.pls_payable_amount} - {self.trx_pay_date} - {self.trx_hash} - {self.priceUSD} - {self.priceFX} - {self.approved} - {self.paid}'
+        return f'{self.index} - {self.share_sequence} - {self.timeStamp} - {self.pls_wallet_payer} - {self.pls_wihdrawed} - {self.pls_payable_amount} - {self.trx_pay_date} - {self.trx_hash} - {self.priceUSD} - {self.priceFX} - {self.approved} - {self.paid}'
     
     @staticmethod
-    def new_header(share_sequence, timeStamp, pls_wallet_payer, pls_payable_amount, priceUSD, priceFX):
-        new_share = pls_share(share_sequence, timeStamp, pls_wallet_payer, pls_payable_amount, None, None, priceUSD, priceFX, True, False)
+    def new_header(share_sequence, pls_wallet_payer, pls_withdrawed, pls_payable_amount, priceUSD, priceFX):
+        new_share = pls_share(share_sequence, datetime.now(), pls_wallet_payer, pls_withdrawed, pls_payable_amount, None, None, priceUSD, priceFX, True, False)
         db.session.add(new_share)
         db.session.commit()
         return new_share
@@ -786,10 +788,14 @@ class pls_share_details(db.Model):
     
     @staticmethod
     def new_detail(share_sequence, pls_wallet_payer, whitdrawal_id, validatorIndex, blockNumber, timeStamp, whitdrawed_amount, share_pct, share_amount):
-        new_detail = pls_share_details(share_sequence, pls_wallet_payer, whitdrawal_id, validatorIndex, blockNumber, timeStamp, whitdrawed_amount, True, share_pct, share_amount, None, False)
+        new_detail = pls_share_details(share_sequence, pls_wallet_payer, whitdrawal_id, validatorIndex, blockNumber, timeStamp, whitdrawed_amount, True, share_pct, share_amount, datetime.now(), False)
         db.session.add(new_detail)
         db.session.commit()
         return new_detail
+    
+    @staticmethod
+    def return_total_by_sequence(share_sequence):
+        return pls_share_details.query.filter_by(share_sequence=share_sequence).sum(pls_share_details.share_amount)
     
     @staticmethod
     def set_requested(share_sequence, pls_wallet_payer, share_requested_date):

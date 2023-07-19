@@ -19,11 +19,12 @@ from app import db, adminlte, datetime, init_login, \
     str_to_bool, login_manager
 from .models import Users, master_config
 from .models import logs, sysalerts
-from .models import pls_wallets
+from .models import pls_wallets, pls_validator_withdrawals, pls_price
 from .models import task_scheduler, task_list
+from .models import pls_share_seq, pls_share, pls_share_details
 from .utl import generate_uuid, user_login, logout as user_logout, \
     get_data_from_response, new_log, \
-    monthdiff, get_var_value
+    monthdiff, get_var_value, rand_string
 from wtforms import form, fields, validators, widgets, TextAreaField, RadioField, ValidationError
 from markupsafe import Markup
 from .str_log import *
@@ -887,6 +888,158 @@ class ModelCroner(sqla.ModelView):
         logger.warning(log2store)
         new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_DELETE}', data=log2store, image=None)
         return super().delete_model(model)
+    
+    
+# ###############################
+# Class for Share payments
+# ###############################
+class ModelShareHeaders(sqla.ModelView):
+    list_template = 'myadmin3/admin_std_list.html'
+    create_modal = myconfig['ADMIN_MODAL']
+    edit_modal = myconfig['ADMIN_MODAL']
+    extra_js = []
+    can_set_page_size = True
+    column_searchable_list = []
+    column_list = ['timeStamp', 'share_sequence', 'pls_wallet_payer', 'pls_payable_amount', 'trx_pay_date', 'trx_hash', 'priceUSD', 'priceFX', 'approved', 'paid']
+    column_exclude_list = []
+    column_filters = ['timeStamp', 'pls_wallet_payer', 'trx_pay_date', 'approved', 'paid']
+    form_excluded_columns = ['pls_payable_amount']
+    form_widget_args = {}
+    column_labels = {
+        'share_sequence' : 'Sequence',
+        'timeStamp': 'Timestamp',
+        'pls_wallet_payer': 'Payee Wallet',
+        'pls_payable_amount': 'Payable amount',
+        'trx_pay_date' : 'Payment Date',
+        'trx_hash' : 'Transaction Hash'
+    }
+    form_overrides = {
+    }
+    form_extra_fields = {
+        'pls_wallet_payer' : sqla.fields.QuerySelectField('Payer Wallet', query_factory=lambda: pls_wallets.get_all(), allow_blank=False, blank_text='(Select a Wallet to Generate Order)'),
+        # 'task_rel' : sqla.fields.QuerySelectField('Task Name', query_factory=lambda: task_list.get_all(), allow_blank=False, blank_text='(Select a Task)'),
+        # 'task_cron' : fields.StringField('Cron Schedule', validators=[validators.DataRequired()]),
+        # 'task_active' : fields.BooleanField('Active?', default=False),
+    }
+    
+    creation_attributes = ['pls_wallet_payer']
+    creation_attributes_titles = ['Select Payer Wallet to Generate Order']
+        
+    def is_accessible(self):
+        set_template_objects(self)
+        return login.current_user.is_authenticated and (login.current_user.is_admin or login.current_user.is_staff)
+
+    # Custom creation form
+    def create_form(self, obj=None):
+        form = super().create_form(obj=obj)
+        form_attributes = self.creation_attributes
+        for field in list(form):
+            if field.name not in form_attributes:
+                form._fields.pop(field.name)
+        return form
+    
+    # Custom edit form
+    def on_form_prefill(self, form, id):
+        form_attributes = self.creation_attributes
+        for field in list(form):
+            if field.name in form_attributes:
+                form._fields.pop(field.name)
+        return form
+    
+    # change creation process
+    def create_model(self, form):
+        SHARE_PCT = myconfig['REWARD_BASE_PCT']
+        pls_wallet_payer = form.data['pls_wallet_payer']
+        pls_wallet_address = pls_wallet_payer.address
+        pls_wallet_owner = pls_wallet_payer.owner
+        pls_share_sequence = pls_share_seq.new_sequence(pls_wallet_address, rand_string(6))
+        last_pls_price = pls_price.get_last()
+        priceUSD, priceFX = last_pls_price.priceUSD, last_pls_price.priceFX
+        
+        # lets get pending transactions
+        pls_pending_transactions = pls_validator_withdrawals.get_not_in_share_by_wallet(pls_wallet_address)
+        
+        total_registered = 0
+        total_witdrawed = 0
+        total_shared = 0        
+        if pls_pending_transactions is not None:
+            for pls_share_trx in pls_pending_transactions:
+                sequence_txt = pls_share_sequence.pls_sequence
+                sequence_idx = pls_share_sequence.index
+                withdrawal_id = pls_share_trx.index
+                validatorIndex = pls_share_trx.validatorIndex
+                blockNumber = pls_share_trx.blockNumber
+                timeStamp = pls_share_trx.timeStamp
+                withdrawed_amount = pls_share_trx.amount
+                share_amount = withdrawed_amount * SHARE_PCT
+                total_witdrawed += withdrawed_amount
+                total_shared += share_amount
+                try:
+                    pls_share_details.new_detail(sequence_idx, pls_wallet_payer.address, withdrawal_id, validatorIndex, blockNumber, timeStamp, withdrawed_amount, SHARE_PCT, share_amount)
+                except Exception as e:
+                    flash(f'SEQUENCE [{sequence_txt}] - Error creating share detail for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
+                    break
+                total_registered += 1
+                
+            # once all transactions are done
+            try:
+                pls_share.new_header(sequence_idx, pls_wallet_payer, total_witdrawed, total_shared, priceUSD, priceFX)
+            except Exception as e:
+                flash(f'SEQUENCE [{sequence_txt}] - Error creating share header for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
+                
+            log2store = LOG_CREATE % (login.current_user.email, form.data)
+            logger.info(log2store)
+            new_log(users_id=login.current_user.id, module=self.name, severity=SEV_INF, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_CREATE}', data=log2store, image=None)
+            flash(f'{SHARE_PCT} for address {pls_wallet_payer.address} owned by {pls_wallet_payer.owner} had {len(pls_pending_transactions)} pending transactions.', 'warning')
+            flash(f'SEQUENCE [{sequence_txt}] - {total_registered} transactions registered for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {total_witdrawed} PLS withdrawn - {total_shared} PLS shared', 'success')
+
+        else:
+            flash(f'No pending transactions for {pls_wallet_payer.address} {pls_wallet_payer.owner}', 'error')
+        return self.session.query(self.model)
+
+    # disabled editing for all users except admin
+    @property        
+    def can_edit(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
+    @property        
+    def can_delete(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+       
+    def update_model(self, form, model):
+        log2store = LOG_CHANGE % (login.current_user.email, model, form.data)
+        logger.info(log2store)
+        new_log(users_id=login.current_user.id, module=self.name, severity=SEV_INF, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_CHANGE}', data=log2store, image=None)
+        return super().update_model(form, model)
+    
+    def delete_model(self, model):
+        log2store = LOG_DELETE % (login.current_user.email, model)
+        logger.warning(log2store)
+        new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_DELETE}', data=log2store, image=None)
+        return super().delete_model(model)
+    
+    # # get 
+    # SHARE_PCT = myconfig['REWARD_BASE_PCT']
+
+    # @action('create_payment', 'Create Pay Order', 'Are you sure you want to proceed?')
+    # def action_create_payment(self):
+    #     try:
+    #         # query = self.model.query.filter(self.model.id.in_(ids)).all()
+    #         # for my_record in query:            
+    #         #     prev_state = 'Dismissed' if my_record.alert_dismissed else 'Active'
+    #         #     my_record.alert_dismissed = not my_record.alert_dismissed
+    #         #     curr_state = 'Active' if my_record.alert_dismissed else 'Dismissed'
+    #         #     my_record.alert_dismissed_by = login.current_user.id
+    #         #     my_record.alert_dismissed_obs = f'Alert status switched from {prev_state} to {curr_state} by {login.current_user.email}'
+    #         #     db.session.commit()
+    #         log2store = LOG_BATCH % (login.current_user.email, 'Update', 'Alert status switched for user')
+    #         logger.warning(log2store)
+    #         new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_BATCH}', data=log2store, image=None)
+    #         flash('Alert switched for record(s).', 'success')
+    #     except Exception as e:
+    #         if not self.handle_view_exception(e):
+    #             raise
+    #         flash(gettext('Failed to switch: %(error)s', error=str(e)), 'error')
 
 
 # ###############################
@@ -903,6 +1056,7 @@ myadmin = admin.Admin(app, name=app.config['ADMIN_NAME'], index_view=MyAdminInde
 # ###############################
 CAT_INDENT = ' > '
 CAT_PLS = 'Pulse'
+CAT_PLSP = 'Payments'
 CAT_SYST = 'System'
 CAT_TASK = CAT_SYST + ' - Tasks'
 
@@ -911,6 +1065,10 @@ CAT_TASK = CAT_SYST + ' - Tasks'
 # ###############################
 myadmin.add_category(name=CAT_PLS, class_name='fas fa-money-bill')
 myadmin.add_view(ModelPLSWallets(pls_wallets, db.session, name='Pulse Wallets', category=CAT_PLS, menu_icon_type='fas', menu_icon_value='fa-wallet', menu_class_name='navbar-orange'))
+
+myadmin.add_category(name=CAT_PLSP, class_name='fas fa-money-bill-wave')
+myadmin.add_view(ModelShareHeaders(pls_share, db.session, name='Pulse Shares', category=CAT_PLSP, menu_icon_type='fas', menu_icon_value='fa-share-alt', menu_class_name='navbar-orange'))
+myadmin.add_view(ModelShow(pls_share_details, db.session, name='Pulse Share Details', category=CAT_PLSP, menu_icon_type='fas', menu_icon_value='fa-share-alt', menu_class_name='navbar-orange'))
 
 myadmin.add_category(name=CAT_SYST, class_name='fa fa-cogs')
 myadmin.add_view(ModelUsers(Users, db.session, name='System Users', category=CAT_SYST, menu_icon_type='fa', menu_icon_value='fa-user', menu_class_name='navbar-navy'))
