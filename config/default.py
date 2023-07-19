@@ -148,7 +148,7 @@ PLS_PRICE_URI="https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest
 PLS_PRICE_API_KEY="jajajajajaja-jajajajajaja-jajajajajaja"
 WEB3_PROVIDER_URI="https://rpc.pulsechain.com"
 MAX_HEIGHT_CHECK = 17530000
-PLS_PRICE_FX = 1
+PLS_PRICE_FX = 'USD'
 
 # base broker config
 REDIS_HOST = 'redis'

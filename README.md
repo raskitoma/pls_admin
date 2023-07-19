@@ -25,6 +25,7 @@ Also set the following variables:
 - **CHAIN_URI**: `https://scan.pulsechain.com/api` is the default.
 - **PLS_PRICE_URI**: This is the API from CoinMarketCap.  You need to setup an account and get a token.  Default: `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=11145`
 - **PLS_PRICE_API_KEY**: is the token mentioned above
+- **PLS_PRICE_FX**: defines the FX currency to use, default is `USD`.
 - **WEB3_PROVIDER_URI**: Default is `https://rpc.pulsechain.com`.
 - **ADMIN_GRAFANA_URL**: This is the URL for your grafana installation. This is designed solely to have a button on the Admin's dashboard to redirect to your site.
 - **MAX_HEIGHT_CHECK**: This is designed for the first time sync.  It's to prevent the sync operation to look too far up to the moment of the creation of the chain (block #0).  Default is 17530000, but you can set it to your first block height where you had your first PLS transaction.

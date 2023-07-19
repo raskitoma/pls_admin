@@ -31,6 +31,7 @@ PLS_PRICE_API_KEY="my-coinmarketcap-api-key"
 WEB3_PROVIDER_URI="https://rpc.pulsechain.com"
 ADMIN_GRAFANA_URL = 'https://mygrafana.com'
 MAX_HEIGHT_CHECK = 17530000 # use a reasonable height... first sync will take a while
+PLS_PRICE_FX = 'USD'
 
 
 # base broker config
