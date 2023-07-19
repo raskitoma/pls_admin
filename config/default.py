@@ -148,7 +148,7 @@ PLS_PRICE_URI="https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest
 PLS_PRICE_API_KEY="jajajajajaja-jajajajajaja-jajajajajaja"
 WEB3_PROVIDER_URI="https://rpc.pulsechain.com"
 MAX_HEIGHT_CHECK = 17530000
-# EoF
+PLS_PRICE_FX = 1
 
 # base broker config
 REDIS_HOST = 'redis'
@@ -161,3 +161,7 @@ CELERY_TIMEZONE = APP_TIMEZONE
 CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+##################
+# EoF
