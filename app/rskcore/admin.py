@@ -951,7 +951,7 @@ class ModelShareHeaders(sqla.ModelView):
         SHARE_PCT = myconfig['REWARD_BASE_PCT']
         pls_wallet_payer = form.data['pls_wallet_payer']
         pls_wallet_address = pls_wallet_payer.address
-        pls_wallet_owner = pls_wallet_payer.owner
+        # pls_wallet_owner = pls_wallet_payer.owner
         pls_share_sequence = pls_share_seq.new_sequence(pls_wallet_address, rand_string(6))
         last_pls_price = pls_price.get_last()
         priceUSD, priceFX = last_pls_price.priceUSD, last_pls_price.priceFX
@@ -983,7 +983,7 @@ class ModelShareHeaders(sqla.ModelView):
                 
             # once all transactions are done
             try:
-                pls_share.new_header(sequence_idx, pls_wallet_payer, total_witdrawed, total_shared, priceUSD, priceFX)
+                pls_share.new_header(sequence_idx, pls_wallet_payer.address, total_witdrawed, total_shared, priceUSD, priceFX)
             except Exception as e:
                 flash(f'SEQUENCE [{sequence_txt}] - Error creating share header for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
                 
