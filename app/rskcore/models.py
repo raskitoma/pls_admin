@@ -528,6 +528,15 @@ class pls_validator_withdrawals(db.Model):
     def get_all_no_priceUSD():
         return pls_validator_withdrawals.query.filter_by(priceUSD=None).all()
     
+    @staticmethod
+    def get_all_no_priceFX():
+        return pls_validator_withdrawals.query.filter_by(priceFX=None).all()
+    
+    @staticmethod
+    def get_not_in_share_by_wallet(wallet):
+        # get all wallet withdrawals not in pls_share_details by its blockNumber
+        return pls_validator_withdrawals.query.filter(pls_validator_withdrawals.blockNumber.notin_(db.session.query(pls_share_details.blockNumber).filter_by(wallet=wallet))).all()
+           
         
 class task_list(db.Model):
     '''
@@ -602,4 +611,222 @@ class task_scheduler(db.Model):
     @staticmethod
     def get_inactive():
         return task_scheduler.query.filter_by(task_active=False).all()
+    
+class pls_share_seq(db.Model):
+    '''
+    PLS share sequencer - controls share sequence using timestamps
+    '''
+    __tablename__ = 'pls_share_idx'
+    index = db.Column('index', db.Integer, primary_key = True)
+    timeStamp = db.Column('timeStamp', db.DateTime, nullable = False)
+    pls_address = db.Column('pls_address', db.String(100), nullable = False)
+    pls_sequence = db.Column('pls_sequence', db.String(100), nullable = False)
+    
+    def __init__(self, timeStamp, pls_address, pls_sequence):
+        self.timeStamp = timeStamp
+        self.pls_address = pls_address
+        self.pls_sequence = pls_sequence
+        
+    def __repr__(self):
+        return f'{self.index} - {self.timeStamp} - {self.pls_address} - {self.pls_sequence}'
+    
+    @staticmethod
+    def new_sequence(pls_address):
+        wallet = pls_wallets.get_one_by_address(pls_address)
+        try:
+            owner = wallet.owner
+            timeStamp = datetime.now()
+            # create a sequence string using this format: <wallet_owner>_<YYYY/MM/DD>
+            sequence_string = f'{owner}_{timeStamp.strftime("%Y/%m/%d")}'
+            my_sequence = pls_share_seq(timeStamp, pls_address, sequence_string)
+            db.session.add(my_sequence)
+            db.session.commit()
+            return sequence_string
+        except Exception as e:
+            return None            
 
+    @staticmethod
+    def get_all():
+        return pls_share_seq.query.all()
+    
+    @staticmethod
+    def get_sequence_by_address(pls_address):
+        return pls_share_seq.query.filter_by(pls_address=pls_address).all()
+    
+class pls_share(db.Model):
+    '''
+    PLS share header - Controls payment orders to project manager.
+    '''
+    __tablename__ = 'pls_share'
+    index = db.Column('index', db.Integer, primary_key = True)
+    share_sequence = db.Column('share_sequence', db.Integer, db.ForeignKey('pls_share_idx.index'), nullable = True)
+    timeStamp = db.Column('timeStamp', db.DateTime, nullable = False)
+    pls_wallet_payer = db.Column('pls_wallet_payer', db.String(100), nullable = False)
+    pls_payable_amount = db.Column('pls_payable_amount', db.Float, nullable = False)
+    trx_pay_date = db.Column('trx_pay_date', db.DateTime, nullable = True)
+    trx_hash = db.Column('trx_hash', db.String(100), nullable = True)
+    priceUSD = db.Column('priceUSD', db.Float, nullable = True)
+    priceFX = db.Column('priceFX', db.Float, nullable = True)
+    approved = db.Column('approved', db.Boolean, nullable = False, default = True)
+    paid = db.Column('paid', db.Boolean, nullable = False, default = False)
+    
+    def __init__(self, share_sequence, timeStamp, pls_wallet_payer, pls_payable_amount, trx_pay_date, trx_hash, priceUSD, priceFX, approved, paid):
+        self.share_sequence = share_sequence
+        self.timeStamp = timeStamp
+        self.pls_wallet_payer = pls_wallet_payer
+        self.pls_payable_amount = pls_payable_amount
+        self.trx_pay_date = trx_pay_date
+        self.trx_hash = trx_hash
+        self.priceUSD = priceUSD
+        self.priceFX = priceFX
+        self.approved = approved
+        self.paid = paid
+    
+    def __repr__(self):
+        return f'{self.index} - {self.share_sequence} - {self.timeStamp} - {self.pls_wallet_payer} - {self.pls_payable_amount} - {self.trx_pay_date} - {self.trx_hash} - {self.priceUSD} - {self.priceFX} - {self.approved} - {self.paid}'
+    
+    @staticmethod
+    def new_header(share_sequence, timeStamp, pls_wallet_payer, pls_payable_amount, priceUSD, priceFX):
+        new_share = pls_share(share_sequence, timeStamp, pls_wallet_payer, pls_payable_amount, None, None, priceUSD, priceFX, True, False)
+        db.session.add(new_share)
+        db.session.commit()
+        return new_share
+    
+    @staticmethod
+    def set_paid_by_wallet(sequence, wallet, trx_hash):
+        share = pls_share.query.filter_by(share_sequence=sequence, pls_wallet_payer=wallet).first()
+        share.paid = True
+        share.trx_hash = trx_hash
+        share.trx_pay_date = datetime.now()
+        db.session.commit()
+        return share
+    
+    @staticmethod
+    def get_all():
+        return pls_share.query.all()
+    
+    @staticmethod
+    def get_pay_pending():
+        return pls_share.query.filter_by(paid=False).all()
+    
+    @staticmethod
+    def get_pay_pending_by_wallet(wallet):
+        return pls_share.query.filter_by(pls_wallet_payer=wallet, paid=False).all()
+    
+    @staticmethod
+    def get_approved():
+        return pls_share.query.filter_by(approved=True).all()
+    
+    @staticmethod
+    def get_approved_by_wallet(wallet):
+        return pls_share.query.filter_by(pls_wallet_payer=wallet, approved=True).all()
+    
+    @staticmethod
+    def get_not_approved():
+        return pls_share.query.filter_by(approved=False).all()
+    
+    @staticmethod
+    def get_not_approved_by_wallet(wallet):
+        return pls_share.query.filter_by(pls_wallet_payer=wallet, approved=False).all()
+    
+    @staticmethod
+    def set_approved_by_wallet(sequence, wallet):
+        share = pls_share.query.filter_by(share_sequence=sequence, pls_wallet_payer=wallet).first()
+        share.approved = True
+        db.session.commit()
+        return share
+    
+    @staticmethod
+    def set_not_approved_by_wallet(sequence, wallet):
+        share = pls_share.query.filter_by(share_sequence=sequence, pls_wallet_payer=wallet, paid=False).first()
+        try:
+            share.approved = False
+            db.session.commit()
+            return share
+        except Exception as e:
+            return None
+
+            
+class pls_share_details(db.Model):
+    '''
+    PLS share detail - all related movements for each wallet.
+    '''
+    __tablename__ = 'pls_share_details'
+    index = db.Column('index', db.Integer, primary_key = True)
+    share_sequence = db.Column('share_sequence', db.Integer, db.ForeignKey('pls_share_idx.index'), nullable = True)
+    pls_wallet_payer = db.Column('pls_wallet_payer', db.String(100), nullable = False)
+    whitdrawal_id = db.Column('whitdrawal_id', db.Integer, db.ForeignKey('pls_validator_withdrawals.index'), nullable = False)
+    validatorIndex = db.Column('validatorIndex', db.Integer, nullable = False)
+    blockNumber = db.Column('blockNumber', db.Integer, nullable = False)
+    timeStamp = db.Column('timeStamp', db.DateTime, nullable = False)
+    whitdrawed_amount = db.Column('whitdrawed_amount', db.Float, nullable = False)
+    approved = db.Column('approved', db.Boolean, nullable = False, default = True)
+    share_pct = db.Column('share_pct', db.Float, nullable = False)
+    share_amount = db.Column('share_amount', db.Float, nullable = False)
+    share_requested_date = db.Column('share_requested_date', db.DateTime, nullable = True)
+    share_paid = db.Column('trx_paid', db.Boolean, nullable = False, default = False)
+    
+    def __init__(self, share_sequence, pls_wallet_payer, whitdrawal_id, validatorIndex, blockNumber, timeStamp, whitdrawed_amount, approved, share_pct, share_amount, share_requested_date, share_paid):
+        self.share_sequence = share_sequence
+        self.pls_wallet_payer = pls_wallet_payer
+        self.whitdrawal_id = whitdrawal_id
+        self.validatorIndex = validatorIndex
+        self.blockNumber = blockNumber
+        self.timeStamp = timeStamp
+        self.whitdrawed_amount = whitdrawed_amount
+        self.approved = approved
+        self.share_pct = share_pct
+        self.share_amount = share_amount
+        self.share_requested_date = share_requested_date
+        self.share_paid = share_paid
+        
+    def __repr__(self):
+        return f'{self.index} - {self.share_sequence} - {self.pls_wallet_payer} - {self.whitdrawal_id} - {self.validatorIndex} - {self.blockNumber} - {self.timeStamp} - {self.whitdrawed_amount} - {self.approved} - {self.share_pct} - {self.share_amount} - {self.share_requested_date} - {self.share_paid}'
+    
+    
+    @staticmethod
+    def new_detail(share_sequence, pls_wallet_payer, whitdrawal_id, validatorIndex, blockNumber, timeStamp, whitdrawed_amount, share_pct, share_amount):
+        new_detail = pls_share_details(share_sequence, pls_wallet_payer, whitdrawal_id, validatorIndex, blockNumber, timeStamp, whitdrawed_amount, True, share_pct, share_amount, None, False)
+        db.session.add(new_detail)
+        db.session.commit()
+        return new_detail
+    
+    @staticmethod
+    def set_requested(share_sequence, pls_wallet_payer, share_requested_date):
+        share = pls_share_details.query.filter_by(share_sequence=share_sequence, pls_wallet_payer=pls_wallet_payer).first()
+        share.share_requested_date = share_requested_date
+        db.session.commit()
+        return share
+    
+    @staticmethod
+    def set_paid(share_sequence, pls_wallet_payer):
+        share = pls_share_details.query.filter_by(share_sequence=share_sequence, pls_wallet_payer=pls_wallet_payer).first()
+        share.share_paid = True
+        db.session.commit()
+        return share
+    
+    @staticmethod
+    def set_unapproved(share_sequence, pls_wallet_payer):
+        share = pls_share_details.query.filter_by(share_sequence=share_sequence, pls_wallet_payer=pls_wallet_payer, share_paid=False).first()
+        try:
+            share.approved = False
+            db.session.commit()
+            return share
+        except Exception as e:
+            return None
+    
+    @staticmethod
+    def set_approved(share_sequence, pls_wallet_payer):
+        share = pls_share_details.query.filter_by(share_sequence=share_sequence, pls_wallet_payer=pls_wallet_payer).first()
+        share.approved = True
+        db.session.commit()
+        return share
+    
+    @staticmethod
+    def get_all_by_wallet_and_sequence(share_sequence, pls_wallet_payer):
+        return pls_share_details.query.filter_by(share_sequence=share_sequence, pls_wallet_payer=pls_wallet_payer).all()
+    
+        
+        
+    
+    
