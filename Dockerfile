@@ -51,4 +51,5 @@ RUN chmod +x /app/entrypoint.sh
 EXPOSE 5000
 
 # Startup
-CMD ["./entrypoint.sh"]
+# CMD ["./entrypoint.sh"]
+CMD ["sh", "-c", "python3 -m flask run --host 0.0.0.0 --port 5000 & celery -A app.scheduler.celery worker --loglevel=INFO --detach --pidfile='' & celery -A app.scheduler.celery beat --loglevel=INFO --detach --pidfile=''"]
