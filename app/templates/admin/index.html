@@ -26,186 +26,10 @@
         </div><!-- /.container-fluid -->
       </div>    
     <section class="content">
-        <div class="container-fluid">
-          <!-- Small boxes (Stat box) -->
-          <div class="row">
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-info">
-                <div class="inner">
-                  <h3>{{ dash_data.data_contracts_qty }}</h3>
-  
-                  <p>Contracts</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-file-contract"></i>
-                </div>
-                <a href="/admin/contract/" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-success">
-                <div class="inner">
-                  <h3>{{ dash_data.data_tenants_individuals_qty }}</h3>
-  
-                  <p>Tenants Individuals</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-person-add"></i>
-                </div>
-                <a href="/admin/individuals" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-warning">
-                <div class="inner">
-                  <h3>{{ dash_data.data_tenants_business_qty }}</h3>
-  
-                  <p>Tenants Business</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-person-add"></i>
-                </div>
-                <a href="/admin/business" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-danger">
-                <div class="inner">
-                  <h3>{{ dash_data.expiring_qty }}</h3>
-  
-                  <p>Contracts expired/expiring</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <a href="/admin/contract/?flt1_14=2023-04-05+14%3A18%3A00" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-          </div>
-  
-          <div class="row">
-              <div class="col-md-8">
-                  <div class="card">
-                    <div class="card-header border-transparent">
-                      <h3 class="card-title">Contracts</h3>
-  
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table m-0">
-                          <thead>
-                          <tr>
-                            <th>Contract ID</th>
-                            <th>Starts at</th>
-                            <th>Expires at</th>
-                            <th>Status</th>
-                            <th>Description</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          {% for contract_data in dash_data.data_contracts %}
-                          <tr>
-                            <td><a href="/admin/contract/xtrasdocs?id={{contract_data.id}}"><span class="badge badge-secondary">{{ contract_data.id }}&nbsp;<i class="fas fa-eye"></i></span></a></td>
-                            <td>{{ contract_data.starts_at.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ contract_data.expires_at.strftime('%Y-%m-%d') }}</td>
-                            <td>
-                              {% if contract_data.expires_at < dash_data.date_today %}
-                                <span class="badge badge-danger">Expired</span>
-                              {% elif contract_data.expires_at < dash_data.date_expiring %}
-                                <span class="badge badge-warning">Expiring</span>
-                              {% else %}
-                                <span class="badge badge-success">Active</span>
-                              {% endif %}
-                            </td>
-                            <td>
-                              <div class="sparkbar" data-color="#00a65a" data-height="20">{{ contract_data }}</div>
-                            </td>
-                          </tr>
-                          {% endfor %}
-                          </tbody>
-                        </table>
-                      </div>
-                      <!-- /.table-responsive -->
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer clearfix">
-                      <a href="/admin/contract/new/?url=%2Fadmin%2Fcontract%2F" class="btn btn-sm btn-info float-left">Create New Contract</a>
-                      <a href="/admin/contract/" class="btn btn-sm btn-secondary float-right">View All Contracts</a>
-                    </div>
-                    <!-- /.card-footer -->
-              </div>
-  
-              </div>
-              <div class="col-md-4">
-              <!-- Info Boxes Style 2 -->
-              <div class="info-box mb-3 bg-warning">
-                <span class="info-box-icon"><i class="fas fa-tag"></i></span>
-  
-                <div class="info-box-content">
-                  <span class="info-box-text">Log entries</span>
-                  <span class="info-box-number">1157</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-              <div class="info-box mb-3 bg-success">
-                <span class="info-box-icon"><i class="fas fa-check-double"></i></span>
-  
-                <div class="info-box-content">
-                  <span class="info-box-text">Completed Data</span>
-                  <span class="info-box-number">219</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-              <div class="info-box mb-3 bg-danger">
-                <span class="info-box-icon"><i class="fas fa-tasks"></i></span>
-  
-                <div class="info-box-content">
-                  <span class="info-box-text">Pending Tasks</span>
-                  <span class="info-box-number">76</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-              <div class="info-box mb-3 bg-info">
-                <span class="info-box-icon"><i class="far fa-comment"></i></span>
-  
-                <div class="info-box-content">
-                  <span class="info-box-text">System Messages</span>
-                  <span class="info-box-number">163,921</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-              <div class="info-box mb-3 bg-secondary">
-                <span class="info-box-icon"><i class="fas fa-copy"></i></span>
-  
-                <div class="info-box-content">
-                  <span class="info-box-text">Documents</span>
-                  <span class="info-box-number">{{ dash_data.all_docs_qty }}</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-            </div>
-          </div>
-          <!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </section>
+
+      {% include 'admin/dashboard_elements.html' %}
+
+    </section>
     {% else %}   
     <div class="content-header">
         <div class="container-fluid">
@@ -255,6 +79,17 @@
     {% endif %}
 </div>
 {% endblock body %}
+
 {% block tail %}
 <script src="/assets/js/fixadmin.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+      if ($('#contract_list')) {
+        $('#contract_list').DataTable();
+      }
+    });
+</script>
 {% endblock tail %}

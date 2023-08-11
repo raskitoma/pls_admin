@@ -110,7 +110,7 @@ def setup_periodic_tasks(sender, **kwargs):
     )
 
 # PLS Price update
-@celery.task(name='pls_pu', bind=True)
+@celery.task(name='pls_pu', bind=True, rate_limit='1/m')
 def pls_pu(self):
     # clean uploads folder
     logger.info('PLS Price Update - Started')
@@ -124,7 +124,7 @@ def pls_pu(self):
     logger.info(f'PLS Price Update Done{with_errors}')
 
 # Wallets Review
-@celery.task(name='pls_wr', bind=True)
+@celery.task(name='pls_wr', bind=True, rate_limit='1/m')
 def pls_wr(self):
     # clean uploads folder
     logger.info('PLS Wallets Review - Started')
@@ -138,7 +138,7 @@ def pls_wr(self):
     logger.info(f'PLS Wallets Review Done{with_errors}')
 
 # Validators Update
-@celery.task(name='pls_vu', bind=True)
+@celery.task(name='pls_vu', bind=True, rate_limit='1/m')
 def pls_vu(self):
     # clean uploads folder
     logger.info('PLS Validators Update - Started')

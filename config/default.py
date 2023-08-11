@@ -17,7 +17,7 @@ SECRET_KEY = '1234567890abcdefg1234567890abcdefg1234567890abcdefg1234567890abcde
 allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'svg', 'tif', 'pdf'}
 
 # Disable Customer Portal
-ADMIN_ONLY = False
+ADMIN_ONLY = True
 
 # Database configuration
 SQLALCHEMY_TRACK_MODIFICATIONS = False

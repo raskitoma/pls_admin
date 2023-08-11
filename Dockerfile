@@ -36,7 +36,7 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 # installing needed python libraries
 RUN pip3 install -r requirements.txt
-
+# 
 # copying required files
 COPY entrypoint.sh /app/
 COPY *.py /app/
