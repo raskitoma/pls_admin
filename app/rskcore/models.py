@@ -534,8 +534,15 @@ class pls_validator_withdrawals(db.Model):
     @staticmethod
     def get_not_in_share_by_wallet(wallet):
         # get all wallet withdrawals not in pls_share_details by its blockNumber
-        return pls_validator_withdrawals.query.filter(pls_validator_withdrawals.blockNumber.notin_(db.session.query(pls_share_details.blockNumber).filter_by(pls_wallet_payer=wallet))).all()
-           
+        # get all blockNumbers present in pls_share_details
+        registered_blocks = pls_share_details.query.with_entities(pls_share_details.blockNumber).all()
+        # get all withdrawals for the current wallet address that are not in the registered_blocks
+        pending_blocks = []
+        user_blocks = pls_validator_withdrawals.query.filter_by(address=wallet).all()
+        for user_block_data in user_blocks:
+            if user_block_data.blockNumber not in registered_blocks:
+                pending_blocks.append(user_block_data)
+        return pending_blocks
         
 class task_list(db.Model):
     '''

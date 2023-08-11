@@ -951,7 +951,6 @@ class ModelShareHeaders(sqla.ModelView):
         SHARE_PCT = myconfig['REWARD_BASE_PCT']
         pls_wallet_payer = form.data['pls_wallet_payer']
         pls_wallet_address = pls_wallet_payer.address
-        # pls_wallet_owner = pls_wallet_payer.owner
         pls_share_sequence = pls_share_seq.new_sequence(pls_wallet_address, rand_string(6))
         last_pls_price = pls_price.get_last()
         priceUSD, priceFX = last_pls_price.priceUSD, last_pls_price.priceFX
@@ -1017,29 +1016,6 @@ class ModelShareHeaders(sqla.ModelView):
         logger.warning(log2store)
         new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_DELETE}', data=log2store, image=None)
         return super().delete_model(model)
-    
-    # # get 
-    # SHARE_PCT = myconfig['REWARD_BASE_PCT']
-
-    # @action('create_payment', 'Create Pay Order', 'Are you sure you want to proceed?')
-    # def action_create_payment(self):
-    #     try:
-    #         # query = self.model.query.filter(self.model.id.in_(ids)).all()
-    #         # for my_record in query:            
-    #         #     prev_state = 'Dismissed' if my_record.alert_dismissed else 'Active'
-    #         #     my_record.alert_dismissed = not my_record.alert_dismissed
-    #         #     curr_state = 'Active' if my_record.alert_dismissed else 'Dismissed'
-    #         #     my_record.alert_dismissed_by = login.current_user.id
-    #         #     my_record.alert_dismissed_obs = f'Alert status switched from {prev_state} to {curr_state} by {login.current_user.email}'
-    #         #     db.session.commit()
-    #         log2store = LOG_BATCH % (login.current_user.email, 'Update', 'Alert status switched for user')
-    #         logger.warning(log2store)
-    #         new_log(users_id=login.current_user.id, module=self.name, severity=SEV_WRN, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_BATCH}', data=log2store, image=None)
-    #         flash('Alert switched for record(s).', 'success')
-    #     except Exception as e:
-    #         if not self.handle_view_exception(e):
-    #             raise
-    #         flash(gettext('Failed to switch: %(error)s', error=str(e)), 'error')
 
 
 # ###############################
