@@ -54,6 +54,8 @@ C_REL_USERS_MAIL = 'users.email'
 TIME_FORMAT_ARGS = '%Y-%m-%d %H:%M'
 TIME_FORMAT_PRES = 'YYYY-MM-DD HH:mm:ss'
 TIME_CONTRACT_ARGS = '%Y-%m-%d'
+PLS_PRECISION = 9
+PLS_FORMAT = '{:,.18f}'
 
 logger = logging.getLogger(__name__)
 
@@ -917,9 +919,12 @@ class ModelShareHeaders(sqla.ModelView):
     }
     form_extra_fields = {
         'pls_wallet_payer' : sqla.fields.QuerySelectField('Payer Wallet', query_factory=lambda: pls_wallets.get_all(), allow_blank=False, blank_text='(Select a Wallet to Generate Order)'),
-        # 'task_rel' : sqla.fields.QuerySelectField('Task Name', query_factory=lambda: task_list.get_all(), allow_blank=False, blank_text='(Select a Task)'),
-        # 'task_cron' : fields.StringField('Cron Schedule', validators=[validators.DataRequired()]),
-        # 'task_active' : fields.BooleanField('Active?', default=False),
+    }
+
+
+    column_formatters = {
+        'timeStamp': lambda v, c, m, p: m.timeStamp.strftime(TIME_FORMAT_ARGS),
+        'pls_payable_amount' : lambda v, c, m, p: PLS_FORMAT.format((m.pls_payable_amount / 10** PLS_PRECISION)),
     }
     
     creation_attributes = ['pls_wallet_payer']
