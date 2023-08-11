@@ -414,11 +414,10 @@ class pls_wallet_history(db.Model):
             address = address,
             balance = balance,
             date = datetime.now(),
-            priceUSD=price_usd,
-            priceFX=price_fx,
-            taxableIncomeUSD=taxableIncome_usd,
-            taxableIncomeFX=taxableIncome_fx
-            
+            price_usd=price_usd,
+            price_fx=price_fx,
+            taxableIncome_usd=taxableIncome_usd,
+            taxableIncome_fx=taxableIncome_fx
         )
         db.session.add(my_balance)
         db.session.commit()

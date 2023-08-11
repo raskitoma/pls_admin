@@ -121,7 +121,7 @@ def wallets_review():
                             taxableIncome_FX = (balance_increase % 32000000) * price_fx
                     else:
                         taxableIncome_USD = 0
-                        taxableIncome_FX = 0            
+                        taxableIncome_FX = 0
                     pls_wallet_history.new_balance(wallet.address, current_balance, price_usd, price_fx, taxableIncome_USD, taxableIncome_FX)
                     # update wallet balance
                     pls_wallets.update_balance(wallet.address, current_balance)
