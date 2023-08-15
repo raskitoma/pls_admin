@@ -1621,877 +1621,6 @@
         "x": 0,
         "y": 8
       },
-      "id": 54,
-      "panels": [],
-      "title": "Validator Additional Data",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "Shows validator balance as a graphic for all validators owned by selected wallet.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "PLS",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 4,
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 9,
-        "x": 0,
-        "y": 9
-      },
-      "id": 22,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "(validator_monitor_balance_gwei{validator=~\"$validator_list\"} > 16E9)/1E9",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{validator}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Validator balance",
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "Total balance between all validators owned by the selected wallet.  It should be something near the boundaries of over 32M*qty of validators for the selected wallet.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "PLS",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 4,
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total balance"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "purple",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 9,
-        "y": 9
-      },
-      "id": 24,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "(sum(validator_monitor_balance_gwei{validator=~\"$validator_list\"} > 16E9))/1E9",
-          "interval": "",
-          "legendFormat": "Total balance",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Total balance",
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-      },
-      "description": "This shows a bar graph to see the performance of withdrawals for the last 24hours per hour.\n\nSince withdrawals could be made at any time, some times(hours) could be skipped.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "pls"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "none"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "displayName",
-                "value": "PLS"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "usd"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "currencyUSD"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "displayName",
-                "value": "USD"
-              },
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 12,
-        "y": 9
-      },
-      "id": 1,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1h'), \r\nsum(amount * $pls_precision) as PLS\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\nAND \"validatorIndex\" IN ($validator_list)\r\ngroup by 1\r\norder by 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "\"timeStamp\"",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              },
-              {
-                "parameters": [
-                  {
-                    "name": "\"blockReward\"",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [],
-            "limit": 50,
-            "whereJsonTree": {
-              "children1": [
-                {
-                  "id": "89b8aa9a-89ab-4cde-b012-3188da0ff0ac",
-                  "properties": {
-                    "field": "address",
-                    "operator": "equal",
-                    "value": [
-                      "$pls_wallet"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
-                  },
-                  "type": "rule"
-                }
-              ],
-              "id": "b89a9bb9-89ab-4cde-b012-3188da07d29f",
-              "type": "group"
-            },
-            "whereString": "address = '$pls_wallet'"
-          },
-          "table": "pls_mined_blocks"
-        },
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1h'), \r\nsum(amount * $pls_precision * $pls_price) as USD\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\ngroup by 1\r\norder by 1",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "timeFrom": "1d",
-      "title": "Validator Rewards",
-      "transparent": true,
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-      },
-      "description": "This shows a bar graph to see the performance of withdrawals for the last week per day.\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "pls"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "none"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "displayName",
-                "value": "PLS"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "usd"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "currencyUSD"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "displayName",
-                "value": "USD"
-              },
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 16,
-        "y": 9
-      },
-      "id": 17,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "vertical",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "time",
-        "xTickLabelMaxLength": 3,
-        "xTickLabelRotation": 90,
-        "xTickLabelSpacing": 0
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1d'), \r\nsum(amount * $pls_precision) as PLS\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\nAND \"validatorIndex\" IN ($validator_list)\r\ngroup by 1\r\norder by 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "\"timeStamp\"",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              },
-              {
-                "parameters": [
-                  {
-                    "name": "\"blockReward\"",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [],
-            "limit": 50,
-            "whereJsonTree": {
-              "children1": [
-                {
-                  "id": "89b8aa9a-89ab-4cde-b012-3188da0ff0ac",
-                  "properties": {
-                    "field": "address",
-                    "operator": "equal",
-                    "value": [
-                      "$pls_wallet"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
-                  },
-                  "type": "rule"
-                }
-              ],
-              "id": "b89a9bb9-89ab-4cde-b012-3188da07d29f",
-              "type": "group"
-            },
-            "whereString": "address = '$pls_wallet'"
-          },
-          "table": "pls_mined_blocks"
-        },
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1d'), \r\nsum(amount * $pls_precision * $pls_price) as USD\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\ngroup by 1\r\norder by 1",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "timeFrom": "1w",
-      "title": "Validator Rewards",
-      "transparent": true,
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-      },
-      "description": "This shows a bar graph to see the performance of withdrawals for the last month(30 days) per week.\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "pls"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "none"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "displayName",
-                "value": "PLS"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "usd"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "currencyUSD"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "displayName",
-                "value": "USD"
-              },
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 20,
-        "y": 9
-      },
-      "id": 18,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "none",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1w'), \r\nsum(amount * $pls_precision) as PLS\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\nAND \"validatorIndex\" IN ($validator_list)\r\ngroup by 1\r\norder by 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "\"timeStamp\"",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              },
-              {
-                "parameters": [
-                  {
-                    "name": "\"blockReward\"",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [],
-            "limit": 50,
-            "whereJsonTree": {
-              "children1": [
-                {
-                  "id": "89b8aa9a-89ab-4cde-b012-3188da0ff0ac",
-                  "properties": {
-                    "field": "address",
-                    "operator": "equal",
-                    "value": [
-                      "$pls_wallet"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "text"
-                    ]
-                  },
-                  "type": "rule"
-                }
-              ],
-              "id": "b89a9bb9-89ab-4cde-b012-3188da07d29f",
-              "type": "group"
-            },
-            "whereString": "address = '$pls_wallet'"
-          },
-          "table": "pls_mined_blocks"
-        },
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1w'), \r\nsum(amount * $pls_precision * $pls_price) as USD\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\ngroup by 1\r\norder by 1",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "timeFrom": "30d",
-      "title": "Validator Rewards",
-      "transparent": true,
-      "type": "barchart"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
       "id": 53,
       "panels": [],
       "title": "Generation, Withdrawal & Share",
@@ -2619,7 +1748,7 @@
         "h": 10,
         "w": 11,
         "x": 0,
-        "y": 18
+        "y": 9
       },
       "id": 11,
       "options": {
@@ -2834,7 +1963,7 @@
         "h": 10,
         "w": 6,
         "x": 11,
-        "y": 18
+        "y": 9
       },
       "id": 3,
       "options": {
@@ -3041,7 +2170,7 @@
         "h": 10,
         "w": 7,
         "x": 17,
-        "y": 18
+        "y": 9
       },
       "id": 20,
       "options": {
@@ -3127,2164 +2256,3038 @@
       "type": "table"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 19
       },
-      "id": 52,
-      "panels": [],
-      "title": "Validator Vote, Movements and Status",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "This panel will count only the votes done since your validator process started",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
+      "id": 54,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
           },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "filterable": false,
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "description": "Shows validator balance as a graphic for all validators owned by selected wallet.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "validator"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "PLS",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
               },
-              {
-                "id": "links",
-                "value": [
+              "decimals": 4,
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
                   {
-                    "targetBlank": true,
-                    "title": "https://beacon.pulsechain.com//validator/${__value.raw}",
-                    "url": "https://beacon.pulsechain.com//validator/${__value.raw}"
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
                   }
                 ]
               },
-              {
-                "id": "custom.align",
-                "value": "auto"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #A"
+              "unit": "short"
             },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Attestation"
-              },
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "custom.align",
-                "value": "auto"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "rgba(245, 54, 54, 0.9)",
-                      "value": null
-                    },
-                    {
-                      "color": "rgba(237, 129, 40, 0.89)",
-                      "value": 5
-                    },
-                    {
-                      "color": "rgba(50, 172, 45, 0.97)",
-                      "value": 225
-                    }
-                  ]
-                }
-              }
-            ]
+            "overrides": []
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #B"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Aggregate"
-              },
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "custom.align",
-                "value": "auto"
-              }
-            ]
+          "gridPos": {
+            "h": 8,
+            "w": 9,
+            "x": 0,
+            "y": 9
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #C"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Proposal"
-              },
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "custom.align",
-                "value": "auto"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 9,
-        "x": 0,
-        "y": 29
-      },
-      "id": 49,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": true,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": true
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "validator"
-          }
-        ]
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "max by (validator) (validator_monitor_unaggregated_attestation_total{validator=~\"$validator_list\"})",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "max by (validator) (validator_monitor_aggregated_attestation_total{validator=~\"$validator_list\"})",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "max by (validator) (validator_monitor_beacon_block_total{validator=~\"$validator_list\"})",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "C"
-        }
-      ],
-      "title": "Validator vote summary",
-      "transformations": [
-        {
-          "id": "merge",
+          "id": 22,
           "options": {
-            "reducers": []
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "indexByName": {},
-            "renameByName": {}
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "Shows last hour movements in blocks of 5 minutes for all validators owned by selected address.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "PLS",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 100,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
             }
           },
-          "decimals": 4,
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "dark-green",
-                "value": null
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Generation"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Withdrawal"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "purple",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 6,
-        "x": 9,
-        "y": 29
-      },
-      "id": 30,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
+              "editorMode": "code",
+              "expr": "(validator_monitor_balance_gwei{validator=~\"$validator_list\"} > 16E9)/1E9",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{validator}}",
+              "refId": "A"
+            }
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "(sum((validator_monitor_balance_gwei{validator=~\"$validator_list\"} - validator_monitor_balance_gwei{validator=~\"$validator_list\"} offset 5m)>0 ))/1E9",
-          "format": "time_series",
-          "instant": false,
-          "interval": "5m",
-          "legendFormat": "Generation",
-          "refId": "A"
+          "title": "Validator balance",
+          "transparent": true,
+          "type": "timeseries"
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
           },
-          "editorMode": "code",
-          "expr": "(sum((validator_monitor_balance_gwei{validator=~\"$validator_list\"} - validator_monitor_balance_gwei{validator=~\"$validator_list\"} offset 5m)<0 ))/1E9",
-          "format": "time_series",
-          "instant": false,
-          "interval": "5m",
-          "legendFormat": "Withdrawal",
-          "refId": "B"
-        }
-      ],
-      "timeFrom": "now-1h",
-      "title": "5m movements in last hour",
-      "transformations": [],
-      "transparent": true,
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "description": "Total balance between all validators owned by the selected wallet.  It should be something near the boundaries of over 32M*qty of validators for the selected wallet.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "validator"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "PLS",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
               },
-              {
-                "id": "links",
-                "value": [
+              "decimals": 4,
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
                   {
-                    "targetBlank": true,
-                    "title": "https://beacon.pulsechain.com/validator/${__value.raw}",
-                    "url": "https://beacon.pulsechain.com/validator/${__value.raw}"
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
                   }
                 ]
               },
-              {
-                "id": "custom.align"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #A"
+              "unit": "short"
             },
-            "properties": [
+            "overrides": [
               {
-                "id": "displayName",
-                "value": "balance"
-              },
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "decimals",
-                "value": 9
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "custom.align"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "rgba(245, 54, 54, 0.9)",
-                      "value": null
-                    },
-                    {
-                      "color": "rgba(237, 129, 40, 0.89)",
-                      "value": 32
-                    },
-                    {
-                      "color": "rgba(50, 172, 45, 0.97)",
-                      "value": 32
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Status"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "custom.align"
-              },
-              {
-                "id": "mappings",
-                "value": [
+                "matcher": {
+                  "id": "byName",
+                  "options": "Total balance"
+                },
+                "properties": [
                   {
-                    "options": {
-                      "0": {
-                        "color": "yellow",
-                        "index": 0,
-                        "text": "Pending"
-                      },
-                      "1": {
-                        "color": "green",
-                        "index": 1,
-                        "text": "Active"
-                      },
-                      "10": {
-                        "color": "blue",
-                        "index": 2,
-                        "text": "Exited"
-                      },
-                      "110": {
-                        "color": "purple",
-                        "index": 3,
-                        "text": "Withdrawable"
-                      },
-                      "1010": {
-                        "color": "red",
-                        "index": 4,
-                        "text": "Slashed"
-                      },
-                      "1110": {
-                        "color": "orange",
-                        "index": 5,
-                        "text": "Slashed Withdrawable"
-                      }
-                    },
-                    "type": "value"
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
                   }
                 ]
-              },
-              {
-                "id": "custom.width"
               }
             ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 9,
-        "x": 15,
-        "y": 29
-      },
-      "id": 50,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "enablePagination": true,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "balance"
-          }
-        ]
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
           },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by(validator) (validator_monitor_balance_gwei{validator=~\"$validator_list\"}/1E9)",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          "gridPos": {
+            "h": 8,
+            "w": 3,
+            "x": 9,
+            "y": 9
           },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by(validator) (validator_monitor_active{validator=~\"$validator_list\"})",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "Active",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by(validator) (validator_monitor_slashed{validator=~\"$validator_list\"}*1000)",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "Slashed",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by(validator) (validator_monitor_exited{validator=~\"$validator_list\"}*10)",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "Exited",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by(validator) (validator_monitor_withdrawable{validator=~\"$validator_list\"}*100)",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "Withdrawable",
-          "refId": "E"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "validator_monitor_validator_in_current_sync_committee{validator=~\"$validator_list\"}",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "Sync Committee",
-          "refId": "F"
-        }
-      ],
-      "title": "Validator main info",
-      "transformations": [
-        {
-          "id": "seriesToColumns",
+          "id": 24,
           "options": {
-            "byField": "validator"
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Status",
-            "binary": {
-              "left": "Value #C",
-              "operator": "+",
-              "reducer": "sum",
-              "right": "Value #D"
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "Value #B",
-                "Value #C",
-                "Value #D",
-                "Value #E"
-              ],
-              "reducer": "sum"
-            },
-            "replaceFields": false
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time 1": true,
-              "Time 2": true,
-              "Time 3": true,
-              "Time 4": true,
-              "Time 5": true,
-              "Time 6": true,
-              "Value #B": true,
-              "Value #C": true,
-              "Value #D": true,
-              "Value #E": true,
-              "__name__": true,
-              "instance": true,
-              "job": true
-            },
-            "indexByName": {
-              "Status": 15,
-              "Time 1": 1,
-              "Time 2": 3,
-              "Time 3": 5,
-              "Time 4": 7,
-              "Time 5": 11,
-              "Time 6": 13,
-              "Value #A": 2,
-              "Value #B": 4,
-              "Value #C": 6,
-              "Value #D": 12,
-              "Value #E": 14,
-              "Value #F": 16,
-              "__name__": 8,
-              "instance": 9,
-              "job": 10,
-              "validator": 0
-            },
-            "renameByName": {
-              "Time 5": "",
-              "Value #F": "Sync Committee"
-            }
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "table"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 39
-      },
-      "id": 51,
-      "panels": [],
-      "title": "Hardware, Network & Alerts",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "mem usage",
-            "axisPlacement": "left",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 50,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": null
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "load avg lighthouse"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "load avg lighthouse_validator"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-blue",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "memory lighthouse"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "memory lighthouse_validator"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/load avg */"
-            },
-            "properties": [
-              {
-                "id": "decimals",
-                "value": 1
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
               },
-              {
-                "id": "custom.axisLabel",
-                "value": "CPU usage rate"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "transparent",
-                      "value": null
-                    },
-                    {
-                      "color": "dark-red",
-                      "value": 5
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              },
-              {
-                "id": "unit",
-                "value": "percentunit"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/memory */"
-            },
-            "properties": [
-              {
-                "id": "custom.scaleDistribution",
-                "value": {
-                  "log": 2,
-                  "type": "log"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 7,
-        "x": 0,
-        "y": 40
-      },
-      "id": 26,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
+              "editorMode": "code",
+              "expr": "(sum(validator_monitor_balance_gwei{validator=~\"$validator_list\"} > 16E9))/1E9",
+              "interval": "",
+              "legendFormat": "Total balance",
+              "range": true,
+              "refId": "A"
+            }
           ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "avg_over_time(process_resident_memory_bytes{job=\"$validator_job\"}[1m:5s])",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "memory",
-          "range": true,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "system_loadavg_1{job=\"$validator_job\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "load avg",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "system_loadavg_5{job=\"$validator_job\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "load avg",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "system_loadavg_15{job=\"$validator_job\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "load avg",
-          "refId": "D"
-        }
-      ],
-      "title": "Hardware usage",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "datasource",
-        "uid": "-- Mixed --"
-      },
-      "description": "Get's last block chain from node and shows it's against the last checked block on the scheduler - This is used to know how much our data is up to date.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "A"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Current Height"
-              },
-              {
-                "id": "unit",
-                "value": "locale"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "blockheight"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "locale"
-              },
-              {
-                "id": "displayName",
-                "value": "Last Checked"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "C"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "locale"
-              },
-              {
-                "id": "displayName",
-                "value": "Diff"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "green",
-                      "value": null
-                    },
-                    {
-                      "color": "yellow",
-                      "value": 250
-                    },
-                    {
-                      "color": "orange",
-                      "value": 500
-                    },
-                    {
-                      "color": "red",
-                      "value": 1000
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 4,
-        "x": 7,
-        "y": 40
-      },
-      "id": 16,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "builder",
-          "expr": "chain_head_block",
-          "instant": false,
-          "range": true,
-          "refId": "A"
+          "title": "Total balance",
+          "transparent": true,
+          "type": "timeseries"
         },
         {
           "datasource": {
             "type": "postgres",
             "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
           },
-          "editorMode": "code",
-          "format": "table",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "SELECT blockheight FROM pls_block_explorer ORDER BY date DESC LIMIT 1 ",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
+          "description": "This shows a bar graph to see the performance of withdrawals for the last 24hours per hour.\n\nSince withdrawals could be made at any time, some times(hours) could be skipped.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
                   {
-                    "name": "blockheight",
-                    "type": "functionParameter"
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "pls"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "none"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "PLS"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "usd"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "currencyUSD"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "USD"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 4,
+            "x": 12,
+            "y": 9
+          },
+          "id": 1,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1h'), \r\nsum(amount * $pls_precision) as PLS\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\nAND \"validatorIndex\" IN ($validator_list)\r\ngroup by 1\r\norder by 1",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"timeStamp\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"blockReward\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
                   }
                 ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
+                "groupBy": [],
+                "limit": 50,
+                "whereJsonTree": {
+                  "children1": [
+                    {
+                      "id": "89b8aa9a-89ab-4cde-b012-3188da0ff0ac",
+                      "properties": {
+                        "field": "address",
+                        "operator": "equal",
+                        "value": [
+                          "$pls_wallet"
+                        ],
+                        "valueSrc": [
+                          "value"
+                        ],
+                        "valueType": [
+                          "text"
+                        ]
+                      },
+                      "type": "rule"
+                    }
+                  ],
+                  "id": "b89a9bb9-89ab-4cde-b012-3188da07d29f",
+                  "type": "group"
                 },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 1,
-            "orderBy": {
-              "property": {
-                "name": "date",
-                "type": "string"
+                "whereString": "address = '$pls_wallet'"
               },
-              "type": "property"
+              "table": "pls_mined_blocks"
             },
-            "orderByDirection": "DESC"
-          },
-          "table": "pls_block_explorer"
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1h'), \r\nsum(amount * $pls_precision * $pls_price) as USD\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\ngroup by 1\r\norder by 1",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "timeFrom": "1d",
+          "title": "Validator Rewards",
+          "transparent": true,
+          "type": "barchart"
         },
         {
           "datasource": {
-            "name": "Expression",
-            "type": "__expr__",
-            "uid": "__expr__"
+            "type": "postgres",
+            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
           },
-          "expression": "$A-$B",
-          "hide": false,
-          "refId": "C",
-          "type": "math"
-        }
-      ],
-      "title": "Current/Checked Height",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "This panel won't have consistant values during the first hour of the node started process",
-      "fieldConfig": {
-        "defaults": {
-          "decimals": 0,
-          "displayName": "",
-          "mappings": [
-            {
-              "options": {
-                "": {
-                  "color": "green",
-                  "text": "0"
+          "description": "This shows a bar graph to see the performance of withdrawals for the last week per day.\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
                 }
               },
-              "type": "value"
-            }
-          ],
-          "max": 100,
-          "min": 0,
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
               {
-                "color": "green",
-                "value": null
+                "matcher": {
+                  "id": "byName",
+                  "options": "pls"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "none"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "PLS"
+                  }
+                ]
               },
               {
-                "color": "#EAB839",
-                "value": 25
-              },
-              {
-                "color": "red",
-                "value": 50
+                "matcher": {
+                  "id": "byName",
+                  "options": "usd"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "currencyUSD"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "USD"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
               }
             ]
           },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 3,
-        "x": 11,
-        "y": 40
-      },
-      "id": 32,
-      "options": {
-        "displayMode": "lcd",
-        "minVizHeight": 10,
-        "minVizWidth": 0,
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "text": {},
-        "valueMode": "color"
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          "gridPos": {
+            "h": 8,
+            "w": 4,
+            "x": 16,
+            "y": 9
           },
-          "editorMode": "code",
-          "expr": "error_total{job=\"$validator_job\"} - error_total{job=\"$validator_job\"} offset 1h",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "Errors",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          "id": 17,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "vertical",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "time",
+            "xTickLabelMaxLength": 3,
+            "xTickLabelRotation": 90,
+            "xTickLabelSpacing": 0
           },
-          "editorMode": "code",
-          "expr": "warn_total{job=\"$validator_job\"} - warn_total{job=\"$validator_job\"} offset 1h",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Warns",
-          "range": true,
-          "refId": "C"
-        }
-      ],
-      "title": "Hourly log type counter",
-      "transformations": [],
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "Average validator count in the PLS Network",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 0,
-          "mappings": [
+          "targets": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1d'), \r\nsum(amount * $pls_precision) as PLS\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\nAND \"validatorIndex\" IN ($validator_list)\r\ngroup by 1\r\norder by 1",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"timeStamp\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"blockReward\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [],
+                "limit": 50,
+                "whereJsonTree": {
+                  "children1": [
+                    {
+                      "id": "89b8aa9a-89ab-4cde-b012-3188da0ff0ac",
+                      "properties": {
+                        "field": "address",
+                        "operator": "equal",
+                        "value": [
+                          "$pls_wallet"
+                        ],
+                        "valueSrc": [
+                          "value"
+                        ],
+                        "valueType": [
+                          "text"
+                        ]
+                      },
+                      "type": "rule"
+                    }
+                  ],
+                  "id": "b89a9bb9-89ab-4cde-b012-3188da07d29f",
+                  "type": "group"
+                },
+                "whereString": "address = '$pls_wallet'"
+              },
+              "table": "pls_mined_blocks"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1d'), \r\nsum(amount * $pls_precision * $pls_price) as USD\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\ngroup by 1\r\norder by 1",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "timeFrom": "1w",
+          "title": "Validator Rewards",
+          "transparent": true,
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+          },
+          "description": "This shows a bar graph to see the performance of withdrawals for the last month(30 days) per week.\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
                 }
               },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
               {
-                "color": "green",
-                "value": null
+                "matcher": {
+                  "id": "byName",
+                  "options": "pls"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "none"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "PLS"
+                  }
+                ]
               },
               {
-                "color": "red",
-                "value": 80
+                "matcher": {
+                  "id": "byName",
+                  "options": "usd"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "currencyUSD"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "USD"
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  }
+                ]
               }
             ]
           },
-          "unit": "locale"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 14,
-        "y": 40
-      },
-      "id": 45,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          "gridPos": {
+            "h": 8,
+            "w": 4,
+            "x": 20,
+            "y": 9
           },
-          "expr": "avg(beacon_head_state_total_validators_total)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "title": "Avg. Validator Count",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "This triggers when the process is down (not reporting \"up\")",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "id": 18,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
           },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "transparent",
-                "value": 0.9
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 3,
-        "x": 17,
-        "y": 40
-      },
-      "id": 40,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "up{job=\"$validator_job\"}",
-          "interval": "",
-          "legendFormat": "validator",
-          "range": true,
-          "refId": "B"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "lt",
-          "value": 0.9,
-          "visible": true
-        }
-      ],
-      "title": "Alert: Process down",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "Allows triggering alerts when error or warn thresholds are reached.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 50
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 4,
-        "x": 20,
-        "y": 40
-      },
-      "id": 38,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "error_total{job=\"$node_job\"} - error_total{job=\"$node_job\"} offset 1h",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "errors",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "warn_total{job=\"$node_job\"} - warn_total{job=\"$node_job\"} offset 1h",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "warnings",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 50,
-          "visible": true
-        }
-      ],
-      "title": "Alert: ${threshold_err} errors  or ${threshold_warn} warns  in 1h",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "This alert is useful only for people who has automatic restart of the process after crash. \nThis can be made for example by using the prysm.bat file on windows with \"set PRYSM_AUTORESTART=true&\", or with docker with \"--restart always\"",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "left",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "decimals": 1,
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "transparent",
-                "value": 0.1
-              }
-            ]
-          },
-          "unit": "h"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 3,
-        "x": 17,
-        "y": 41
-      },
-      "id": 44,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{job}}",
-          "range": true,
-          "refId": "B"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "lt",
-          "value": 0.1,
-          "visible": true
-        }
-      ],
-      "title": "Warn: The process just restarted",
-      "transformations": [],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 4,
-        "x": 20,
-        "y": 41
-      },
-      "id": 28,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "editorMode": "code",
-          "expr": "validator_monitor_slashed{validator=~\"$validator_list\"}",
-          "interval": "",
-          "legendFormat": "{{validator}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Alert: Validator has been slashed",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 9,
-        "w": 7,
-        "x": 17,
-        "y": 42
-      },
-      "id": 42,
-      "options": {
-        "alertInstanceLabelFilter": "",
-        "alertName": "",
-        "dashboardAlerts": true,
-        "dashboardTitle": "",
-        "groupBy": [],
-        "groupMode": "default",
-        "maxItems": 10,
-        "showOptions": "current",
-        "sortOrder": 3,
-        "stateFilter": {
-          "alerting": true,
-          "error": true,
-          "execution_error": true,
-          "firing": true,
-          "noData": false,
-          "no_data": true,
-          "normal": false,
-          "ok": false,
-          "paused": true,
-          "pending": true
-        },
-        "tags": [],
-        "viewMode": "list"
-      },
-      "pluginVersion": "8.3.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-          },
-          "refId": "A"
-        }
-      ],
-      "title": "All alerts",
-      "type": "alertlist"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "Average active validators in the PLS network",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 0,
-          "mappings": [
+          "targets": [
             {
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1w'), \r\nsum(amount * $pls_precision) as PLS\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\nAND \"validatorIndex\" IN ($validator_list)\r\ngroup by 1\r\norder by 1",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"timeStamp\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "parameters": [
+                      {
+                        "name": "\"blockReward\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [],
+                "limit": 50,
+                "whereJsonTree": {
+                  "children1": [
+                    {
+                      "id": "89b8aa9a-89ab-4cde-b012-3188da0ff0ac",
+                      "properties": {
+                        "field": "address",
+                        "operator": "equal",
+                        "value": [
+                          "$pls_wallet"
+                        ],
+                        "valueSrc": [
+                          "value"
+                        ],
+                        "valueType": [
+                          "text"
+                        ]
+                      },
+                      "type": "rule"
+                    }
+                  ],
+                  "id": "b89a9bb9-89ab-4cde-b012-3188da07d29f",
+                  "type": "group"
+                },
+                "whereString": "address = '$pls_wallet'"
+              },
+              "table": "pls_mined_blocks"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT \r\n$__timeGroupAlias(\"timeStamp\", '1w'), \r\nsum(amount * $pls_precision * $pls_price) as USD\r\nFROM pls_validator_withdrawals\r\nWHERE address = '$pls_wallet'\r\nAND \r\n$__timeFilter(\"timeStamp\") \r\ngroup by 1\r\norder by 1",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "timeFrom": "30d",
+          "title": "Validator Rewards",
+          "transparent": true,
+          "type": "barchart"
+        }
+      ],
+      "title": "Validator Additional Data",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 52,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "This panel will count only the votes done since your validator process started",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": false,
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "validator"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "string"
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "https://beacon.pulsechain.com//validator/${__value.raw}",
+                        "url": "https://beacon.pulsechain.com//validator/${__value.raw}"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.align",
+                    "value": "auto"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Value #A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Attestation"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-text"
+                    }
+                  },
+                  {
+                    "id": "custom.align",
+                    "value": "auto"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "rgba(245, 54, 54, 0.9)",
+                          "value": null
+                        },
+                        {
+                          "color": "rgba(237, 129, 40, 0.89)",
+                          "value": 5
+                        },
+                        {
+                          "color": "rgba(50, 172, 45, 0.97)",
+                          "value": 225
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Value #B"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Aggregate"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.align",
+                    "value": "auto"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Value #C"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Proposal"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.align",
+                    "value": "auto"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 9,
+            "x": 0,
+            "y": 21
+          },
+          "id": 49,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": true,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": true
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "validator"
+              }
+            ]
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "max by (validator) (validator_monitor_unaggregated_attestation_total{validator=~\"$validator_list\"})",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "max by (validator) (validator_monitor_aggregated_attestation_total{validator=~\"$validator_list\"})",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "max by (validator) (validator_monitor_beacon_block_total{validator=~\"$validator_list\"})",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "C"
+            }
+          ],
+          "title": "Validator vote summary",
+          "transformations": [
+            {
+              "id": "merge",
               "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
+                "reducers": []
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "indexByName": {},
+                "renameByName": {}
+              }
+            }
+          ],
+          "transparent": true,
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "Shows last hour movements in blocks of 5 minutes for all validators owned by selected address.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "PLS",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "bars",
+                "fillOpacity": 100,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
                 }
               },
-              "type": "special"
+              "decimals": 4,
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "dark-green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Generation"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Withdrawal"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 6,
+            "x": 9,
+            "y": 21
+          },
+          "id": 30,
+          "options": {
+            "legend": {
+              "calcs": [
+                "min",
+                "max",
+                "mean"
+              ],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "(sum((validator_monitor_balance_gwei{validator=~\"$validator_list\"} - validator_monitor_balance_gwei{validator=~\"$validator_list\"} offset 5m)>0 ))/1E9",
+              "format": "time_series",
+              "instant": false,
+              "interval": "5m",
+              "legendFormat": "Generation",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "(sum((validator_monitor_balance_gwei{validator=~\"$validator_list\"} - validator_monitor_balance_gwei{validator=~\"$validator_list\"} offset 5m)<0 ))/1E9",
+              "format": "time_series",
+              "instant": false,
+              "interval": "5m",
+              "legendFormat": "Withdrawal",
+              "refId": "B"
             }
           ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "timeFrom": "now-1h",
+          "title": "5m movements in last hour",
+          "transformations": [],
+          "transparent": true,
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
               {
-                "color": "green",
-                "value": null
+                "matcher": {
+                  "id": "byName",
+                  "options": "validator"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "string"
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "targetBlank": true,
+                        "title": "https://beacon.pulsechain.com/validator/${__value.raw}",
+                        "url": "https://beacon.pulsechain.com/validator/${__value.raw}"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.align"
+                  }
+                ]
               },
               {
-                "color": "red",
-                "value": 80
+                "matcher": {
+                  "id": "byName",
+                  "options": "Value #A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "balance"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 9
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-text"
+                    }
+                  },
+                  {
+                    "id": "custom.align"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "rgba(245, 54, 54, 0.9)",
+                          "value": null
+                        },
+                        {
+                          "color": "rgba(237, 129, 40, 0.89)",
+                          "value": 32
+                        },
+                        {
+                          "color": "rgba(50, 172, 45, 0.97)",
+                          "value": 32
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Status"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-text"
+                    }
+                  },
+                  {
+                    "id": "custom.align"
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "yellow",
+                            "index": 0,
+                            "text": "Pending"
+                          },
+                          "1": {
+                            "color": "green",
+                            "index": 1,
+                            "text": "Active"
+                          },
+                          "10": {
+                            "color": "blue",
+                            "index": 2,
+                            "text": "Exited"
+                          },
+                          "110": {
+                            "color": "purple",
+                            "index": 3,
+                            "text": "Withdrawable"
+                          },
+                          "1010": {
+                            "color": "red",
+                            "index": 4,
+                            "text": "Slashed"
+                          },
+                          "1110": {
+                            "color": "orange",
+                            "index": 5,
+                            "text": "Slashed Withdrawable"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.width"
+                  }
+                ]
               }
             ]
           },
-          "unit": "locale"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 14,
-        "y": 43
-      },
-      "id": 46,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          "gridPos": {
+            "h": 10,
+            "w": 9,
+            "x": 15,
+            "y": 21
           },
-          "expr": "avg(beacon_head_state_active_validators_total)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "title": "Avg. Active Validators",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "id": 50,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": true,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
               {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "#F2CC0C",
-                "value": 5
-              },
-              {
-                "color": "#299c46",
-                "value": 10
+                "desc": true,
+                "displayName": "balance"
               }
             ]
           },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 11,
-        "y": 46
-      },
-      "id": 34,
-      "links": [],
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by(validator) (validator_monitor_balance_gwei{validator=~\"$validator_list\"}/1E9)",
+              "format": "table",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by(validator) (validator_monitor_active{validator=~\"$validator_list\"})",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "legendFormat": "Active",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by(validator) (validator_monitor_slashed{validator=~\"$validator_list\"}*1000)",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "legendFormat": "Slashed",
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by(validator) (validator_monitor_exited{validator=~\"$validator_list\"}*10)",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "legendFormat": "Exited",
+              "refId": "D"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by(validator) (validator_monitor_withdrawable{validator=~\"$validator_list\"}*100)",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "legendFormat": "Withdrawable",
+              "refId": "E"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "validator_monitor_validator_in_current_sync_committee{validator=~\"$validator_list\"}",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "legendFormat": "Sync Committee",
+              "refId": "F"
+            }
           ],
-          "fields": "",
-          "values": false
-        },
-        "text": {
-          "titleSize": 10,
-          "valueSize": 20
-        },
-        "textMode": "auto"
+          "title": "Validator main info",
+          "transformations": [
+            {
+              "id": "seriesToColumns",
+              "options": {
+                "byField": "validator"
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "Status",
+                "binary": {
+                  "left": "Value #C",
+                  "operator": "+",
+                  "reducer": "sum",
+                  "right": "Value #D"
+                },
+                "mode": "reduceRow",
+                "reduce": {
+                  "include": [
+                    "Value #B",
+                    "Value #C",
+                    "Value #D",
+                    "Value #E"
+                  ],
+                  "reducer": "sum"
+                },
+                "replaceFields": false
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time 1": true,
+                  "Time 2": true,
+                  "Time 3": true,
+                  "Time 4": true,
+                  "Time 5": true,
+                  "Time 6": true,
+                  "Value #B": true,
+                  "Value #C": true,
+                  "Value #D": true,
+                  "Value #E": true,
+                  "__name__": true,
+                  "instance": true,
+                  "job": true
+                },
+                "indexByName": {
+                  "Status": 15,
+                  "Time 1": 1,
+                  "Time 2": 3,
+                  "Time 3": 5,
+                  "Time 4": 7,
+                  "Time 5": 11,
+                  "Time 6": 13,
+                  "Value #A": 2,
+                  "Value #B": 4,
+                  "Value #C": 6,
+                  "Value #D": 12,
+                  "Value #E": 14,
+                  "Value #F": 16,
+                  "__name__": 8,
+                  "instance": 9,
+                  "job": 10,
+                  "validator": 0
+                },
+                "renameByName": {
+                  "Time 5": "",
+                  "Value #F": "Sync Committee"
+                }
+              }
+            }
+          ],
+          "transparent": true,
+          "type": "table"
+        }
+      ],
+      "title": "Validator Vote, Movements and Status",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
       },
-      "pluginVersion": "10.0.3",
-      "targets": [
+      "id": 51,
+      "panels": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
           },
-          "editorMode": "code",
-          "expr": "libp2p_peers",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Peers connected",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "mem usage",
+                "axisPlacement": "left",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 50,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": [
               {
-                "color": "red",
-                "value": null
+                "matcher": {
+                  "id": "byName",
+                  "options": "load avg lighthouse"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               },
               {
-                "color": "#EAB839",
-                "value": 12
+                "matcher": {
+                  "id": "byName",
+                  "options": "load avg lighthouse_validator"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               },
               {
-                "color": "dark-green",
-                "value": 24
+                "matcher": {
+                  "id": "byName",
+                  "options": "memory lighthouse"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "memory lighthouse_validator"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/load avg */"
+                },
+                "properties": [
+                  {
+                    "id": "decimals",
+                    "value": 1
+                  },
+                  {
+                    "id": "custom.axisLabel",
+                    "value": "CPU usage rate"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "transparent",
+                          "value": null
+                        },
+                        {
+                          "color": "dark-red",
+                          "value": 5
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "custom.axisPlacement",
+                    "value": "right"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "percentunit"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/memory */"
+                },
+                "properties": [
+                  {
+                    "id": "custom.scaleDistribution",
+                    "value": {
+                      "log": 2,
+                      "type": "log"
+                    }
+                  }
+                ]
               }
             ]
           },
-          "unit": "h"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 14,
-        "y": 46
-      },
-      "id": 36,
-      "links": [],
-      "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "gridPos": {
+            "h": 11,
+            "w": 7,
+            "x": 0,
+            "y": 22
+          },
+          "id": 26,
+          "options": {
+            "legend": {
+              "calcs": [
+                "min",
+                "max",
+                "mean",
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "avg_over_time(process_resident_memory_bytes{job=\"$validator_job\"}[1m:5s])",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "memory",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "system_loadavg_1{job=\"$validator_job\"}",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "load avg",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "system_loadavg_5{job=\"$validator_job\"}",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "load avg",
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "system_loadavg_15{job=\"$validator_job\"}",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "load avg",
+              "refId": "D"
+            }
           ],
-          "fields": "",
-          "values": false
+          "title": "Hardware usage",
+          "type": "timeseries"
         },
-        "text": {
-          "titleSize": 10,
-          "valueSize": 20
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Mixed --"
+          },
+          "description": "Get's last block chain from node and shows it's against the last checked block on the scheduler - This is used to know how much our data is up to date.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Current Height"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "blockheight"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Last Checked"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "C"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "locale"
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Diff"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "yellow",
+                          "value": 250
+                        },
+                        {
+                          "color": "orange",
+                          "value": 500
+                        },
+                        {
+                          "color": "red",
+                          "value": 1000
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 4,
+            "x": 7,
+            "y": 22
+          },
+          "id": 16,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "builder",
+              "expr": "chain_head_block",
+              "instant": false,
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "da207089-682a-40bf-96c6-a9ea9e4ca652"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "hide": false,
+              "rawQuery": true,
+              "rawSql": "SELECT blockheight FROM pls_block_explorer ORDER BY date DESC LIMIT 1 ",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [
+                      {
+                        "name": "blockheight",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 1,
+                "orderBy": {
+                  "property": {
+                    "name": "date",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "orderByDirection": "DESC"
+              },
+              "table": "pls_block_explorer"
+            },
+            {
+              "datasource": {
+                "name": "Expression",
+                "type": "__expr__",
+                "uid": "__expr__"
+              },
+              "expression": "$A-$B",
+              "hide": false,
+              "refId": "C",
+              "type": "math"
+            }
+          ],
+          "title": "Current/Checked Height",
+          "type": "stat"
         },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.3",
-      "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
           },
-          "editorMode": "code",
-          "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "Beacon",
-          "range": true,
-          "refId": "B"
+          "description": "This panel won't have consistant values during the first hour of the node started process",
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "displayName": "",
+              "mappings": [
+                {
+                  "options": {
+                    "": {
+                      "color": "green",
+                      "text": "0"
+                    }
+                  },
+                  "type": "value"
+                }
+              ],
+              "max": 100,
+              "min": 0,
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 25
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 11,
+            "y": 22
+          },
+          "id": 32,
+          "options": {
+            "displayMode": "lcd",
+            "minVizHeight": 10,
+            "minVizWidth": 0,
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "text": {},
+            "valueMode": "color"
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "error_total{job=\"$validator_job\"} - error_total{job=\"$validator_job\"} offset 1h",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "Errors",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "warn_total{job=\"$validator_job\"} - warn_total{job=\"$validator_job\"} offset 1h",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "Warns",
+              "range": true,
+              "refId": "C"
+            }
+          ],
+          "title": "Hourly log type counter",
+          "transformations": [],
+          "type": "bargauge"
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
           },
-          "editorMode": "code",
-          "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "Validator",
-          "refId": "A"
+          "description": "Average validator count in the PLS Network",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [
+                {
+                  "options": {
+                    "match": "null",
+                    "result": {
+                      "text": "N/A"
+                    }
+                  },
+                  "type": "special"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 3,
+            "x": 14,
+            "y": 22
+          },
+          "id": 45,
+          "links": [],
+          "maxDataPoints": 100,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "expr": "avg(beacon_head_state_total_validators_total)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "title": "Avg. Validator Count",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "This triggers when the process is down (not reporting \"up\")",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "transparent",
+                    "value": 0.9
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 1,
+            "w": 3,
+            "x": 17,
+            "y": 22
+          },
+          "id": 40,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "up{job=\"$validator_job\"}",
+              "interval": "",
+              "legendFormat": "validator",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "op": "lt",
+              "value": 0.9,
+              "visible": true
+            }
+          ],
+          "title": "Alert: Process down",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "Allows triggering alerts when error or warn thresholds are reached.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 50
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 1,
+            "w": 4,
+            "x": 20,
+            "y": 22
+          },
+          "id": 38,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "error_total{job=\"$node_job\"} - error_total{job=\"$node_job\"} offset 1h",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "errors",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "warn_total{job=\"$node_job\"} - warn_total{job=\"$node_job\"} offset 1h",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "warnings",
+              "refId": "B"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "op": "gt",
+              "value": 50,
+              "visible": true
+            }
+          ],
+          "title": "Alert: ${threshold_err} errors  or ${threshold_warn} warns  in 1h",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "This alert is useful only for people who has automatic restart of the process after crash. \nThis can be made for example by using the prysm.bat file on windows with \"set PRYSM_AUTORESTART=true&\", or with docker with \"--restart always\"",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "decimals": 1,
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "transparent",
+                    "value": 0.1
+                  }
+                ]
+              },
+              "unit": "h"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 1,
+            "w": 3,
+            "x": 17,
+            "y": 23
+          },
+          "id": 44,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "exemplar": true,
+              "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "{{job}}",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "thresholds": [
+            {
+              "colorMode": "critical",
+              "op": "lt",
+              "value": 0.1,
+              "visible": true
+            }
+          ],
+          "title": "Warn: The process just restarted",
+          "transformations": [],
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "links": [],
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 1,
+            "w": 4,
+            "x": 20,
+            "y": 23
+          },
+          "id": 28,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.0.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "validator_monitor_slashed{validator=~\"$validator_list\"}",
+              "interval": "",
+              "legendFormat": "{{validator}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Alert: Validator has been slashed",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "",
+          "gridPos": {
+            "h": 9,
+            "w": 7,
+            "x": 17,
+            "y": 24
+          },
+          "id": 42,
+          "options": {
+            "alertInstanceLabelFilter": "",
+            "alertName": "",
+            "dashboardAlerts": true,
+            "dashboardTitle": "",
+            "groupBy": [],
+            "groupMode": "default",
+            "maxItems": 10,
+            "showOptions": "current",
+            "sortOrder": 3,
+            "stateFilter": {
+              "alerting": true,
+              "error": true,
+              "execution_error": true,
+              "firing": true,
+              "noData": false,
+              "no_data": true,
+              "normal": false,
+              "ok": false,
+              "paused": true,
+              "pending": true
+            },
+            "tags": [],
+            "viewMode": "list"
+          },
+          "pluginVersion": "8.3.0",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "refId": "A"
+            }
+          ],
+          "title": "All alerts",
+          "type": "alertlist"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "Average active validators in the PLS network",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [
+                {
+                  "options": {
+                    "match": "null",
+                    "result": {
+                      "text": "N/A"
+                    }
+                  },
+                  "type": "special"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "locale"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 3,
+            "x": 14,
+            "y": 25
+          },
+          "id": 46,
+          "links": [],
+          "maxDataPoints": 100,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "expr": "avg(beacon_head_state_active_validators_total)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "title": "Avg. Active Validators",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "#F2CC0C",
+                    "value": 5
+                  },
+                  {
+                    "color": "#299c46",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 3,
+            "x": 11,
+            "y": 28
+          },
+          "id": 34,
+          "links": [],
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {
+              "titleSize": 10,
+              "valueSize": 20
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "libp2p_peers",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "{{instance}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Peers connected",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 1,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 12
+                  },
+                  {
+                    "color": "dark-green",
+                    "value": 24
+                  }
+                ]
+              },
+              "unit": "h"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 3,
+            "x": 14,
+            "y": 28
+          },
+          "id": 36,
+          "links": [],
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {
+              "titleSize": 10,
+              "valueSize": 20
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "10.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "Beacon",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "cddc28f1-e98b-43b8-bd83-c419a36d5b84"
+              },
+              "editorMode": "code",
+              "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "Validator",
+              "refId": "A"
+            }
+          ],
+          "title": "Process Started",
+          "transformations": [],
+          "type": "stat"
+        },
+        {
+          "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 11,
+            "y": 31
+          },
+          "id": 48,
+          "libraryPanel": {
+            "name": "Current Epoch",
+            "uid": "d61aa3ed-8347-4db2-a92f-559f34be765d"
+          },
+          "title": "Current Epoch"
         }
       ],
-      "title": "Process Started",
-      "transformations": [],
-      "type": "stat"
-    },
-    {
-      "gridPos": {
-        "h": 2,
-        "w": 3,
-        "x": 11,
-        "y": 49
-      },
-      "id": 48,
-      "libraryPanel": {
-        "name": "Current Epoch",
-        "uid": "d61aa3ed-8347-4db2-a92f-559f34be765d"
-      },
-      "title": "Current Epoch"
+      "title": "Hardware, Network & Alerts",
+      "type": "row"
     }
   ],
   "refresh": "1m",
@@ -5295,7 +5298,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "Estefano",
           "value": "0x2007c9Ff1Cf178d06Ac5aA2506eAC30a8740fd6B"
         },
@@ -5351,7 +5354,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -5533,6 +5536,6 @@
   "timezone": "",
   "title": "Validator Stats",
   "uid": "f3efa864-3cb3-4d61-a76d-1a515bf4b43e",
-  "version": 135,
+  "version": 137,
   "weekStart": ""
 }
