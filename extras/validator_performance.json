@@ -55,7 +55,7 @@
         "content": "# Validator Stats\n\nShows validator performance, wallet balance and other related information.\n\n---\n\n## ${days_of_data} days of available data.\n\n## ${validator_count} validators monitored\n\n---\n\n_Using \"${my_timezone}\" for queries._\n\n\n---",
         "mode": "markdown"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "title": "Validator Stats",
       "transparent": true,
       "type": "text"
@@ -200,7 +200,7 @@
         },
         "textMode": "value_and_name"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -338,7 +338,7 @@
         },
         "textMode": "value_and_name"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -416,6 +416,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -771,7 +772,7 @@
         },
         "textMode": "value_and_name"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -1114,7 +1115,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -1208,6 +1209,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1422,7 +1424,7 @@
         },
         "textMode": "value_and_name"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -1560,7 +1562,7 @@
         },
         "textMode": "value_and_name"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -1767,7 +1769,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -1982,7 +1984,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -2179,8 +2181,8 @@
           "countRows": false,
           "enablePagination": true,
           "fields": [
-            "pls",
-            "usd"
+            "Earned",
+            "Payable Share"
           ],
           "reducer": [
             "sum"
@@ -2189,7 +2191,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "10.1.0",
       "targets": [
         {
           "datasource": {
@@ -2313,8 +2315,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2330,7 +2331,7 @@
             "h": 8,
             "w": 9,
             "x": 0,
-            "y": 9
+            "y": 20
           },
           "id": 22,
           "options": {
@@ -2415,8 +2416,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -2448,7 +2448,7 @@
             "h": 8,
             "w": 3,
             "x": 9,
-            "y": 9
+            "y": 20
           },
           "id": 24,
           "options": {
@@ -2518,8 +2518,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -2575,7 +2574,7 @@
             "h": 8,
             "w": 4,
             "x": 12,
-            "y": 9
+            "y": 20
           },
           "id": 1,
           "options": {
@@ -2731,8 +2730,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -2788,7 +2786,7 @@
             "h": 8,
             "w": 4,
             "x": 16,
-            "y": 9
+            "y": 20
           },
           "id": 17,
           "options": {
@@ -2946,8 +2944,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -3003,7 +3000,7 @@
             "h": 8,
             "w": 4,
             "x": 20,
-            "y": 9
+            "y": 20
           },
           "id": 18,
           "options": {
@@ -3161,8 +3158,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3228,8 +3224,7 @@
                       "mode": "absolute",
                       "steps": [
                         {
-                          "color": "rgba(245, 54, 54, 0.9)",
-                          "value": null
+                          "color": "rgba(245, 54, 54, 0.9)"
                         },
                         {
                           "color": "rgba(237, 129, 40, 0.89)",
@@ -3290,7 +3285,7 @@
             "h": 10,
             "w": 9,
             "x": 0,
-            "y": 21
+            "y": 29
           },
           "id": 49,
           "options": {
@@ -3429,8 +3424,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "dark-green",
-                    "value": null
+                    "color": "dark-green"
                   },
                   {
                     "color": "red",
@@ -3477,7 +3471,7 @@
             "h": 10,
             "w": 6,
             "x": 9,
-            "y": 21
+            "y": 29
           },
           "id": 30,
           "options": {
@@ -3554,8 +3548,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3623,8 +3616,7 @@
                       "mode": "absolute",
                       "steps": [
                         {
-                          "color": "rgba(245, 54, 54, 0.9)",
-                          "value": null
+                          "color": "rgba(245, 54, 54, 0.9)"
                         },
                         {
                           "color": "rgba(237, 129, 40, 0.89)",
@@ -3713,7 +3705,7 @@
             "h": 10,
             "w": 9,
             "x": 15,
-            "y": 21
+            "y": 29
           },
           "id": 50,
           "options": {
@@ -3969,8 +3961,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "transparent",
-                    "value": null
+                    "color": "transparent"
                   }
                 ]
               },
@@ -4057,8 +4048,7 @@
                       "mode": "absolute",
                       "steps": [
                         {
-                          "color": "transparent",
-                          "value": null
+                          "color": "transparent"
                         },
                         {
                           "color": "dark-red",
@@ -4194,8 +4184,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   }
                 ]
               }
@@ -4253,8 +4242,7 @@
                       "mode": "absolute",
                       "steps": [
                         {
-                          "color": "green",
-                          "value": null
+                          "color": "green"
                         },
                         {
                           "color": "yellow",
@@ -4395,8 +4383,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "#EAB839",
@@ -4495,8 +4482,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -4594,8 +4580,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red",
-                    "value": null
+                    "color": "red"
                   },
                   {
                     "color": "transparent",
@@ -4699,8 +4684,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "transparent",
-                    "value": null
+                    "color": "transparent"
                   },
                   {
                     "color": "red",
@@ -4820,8 +4804,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red",
-                    "value": null
+                    "color": "red"
                   },
                   {
                     "color": "transparent",
@@ -4928,8 +4911,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "transparent",
-                    "value": null
+                    "color": "transparent"
                   },
                   {
                     "color": "red",
@@ -5056,8 +5038,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -5121,8 +5102,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red",
-                    "value": null
+                    "color": "red"
                   },
                   {
                     "color": "#F2CC0C",
@@ -5196,8 +5176,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "red",
-                    "value": null
+                    "color": "red"
                   },
                   {
                     "color": "#EAB839",
@@ -5299,8 +5278,8 @@
       {
         "current": {
           "selected": false,
-          "text": "Estefano",
-          "value": "0x2007c9Ff1Cf178d06Ac5aA2506eAC30a8740fd6B"
+          "text": "Dudas",
+          "value": "0xFe4E71dcC42F68d8fb6b0F517cB49cdcaCa9BB86"
         },
         "datasource": {
           "type": "postgres",
@@ -5355,12 +5334,8 @@
       {
         "current": {
           "selected": false,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": "23820",
+          "value": "23820"
         },
         "datasource": {
           "type": "postgres",
@@ -5383,8 +5358,8 @@
       {
         "current": {
           "selected": false,
-          "text": "62",
-          "value": "62"
+          "text": "1",
+          "value": "1"
         },
         "datasource": {
           "type": "postgres",
@@ -5428,8 +5403,8 @@
       {
         "current": {
           "selected": false,
-          "text": "66",
-          "value": "66"
+          "text": "77",
+          "value": "77"
         },
         "datasource": {
           "type": "postgres",
@@ -5536,6 +5511,6 @@
   "timezone": "",
   "title": "Validator Stats",
   "uid": "f3efa864-3cb3-4d61-a76d-1a515bf4b43e",
-  "version": 137,
+  "version": 139,
   "weekStart": ""
 }
