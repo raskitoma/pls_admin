@@ -985,7 +985,7 @@ class ModelShareHeaders(sqla.ModelView):
                     break
                 total_registered += 1
                 
-            # once all transactions are done
+            once all transactions are done
             try:
                 pls_share.new_header(sequence_idx, pls_wallet_payer.address, total_witdrawed, total_shared, priceUSD, priceFX)
             except Exception as e:

@@ -534,7 +534,10 @@ class pls_validator_withdrawals(db.Model):
     @staticmethod
     def get_not_in_share_by_wallet(wallet):
         # get all withdrawals for the current wallet address that are not in the registered_blocks
-        registered_withdrawals = pls_share_details.query.with_entities(pls_share_details.whitdrawal_id).all()
+        registered_withdrawals = []
+        withdrawals_in_table = pls_share_details.query.with_entities(pls_share_details.whitdrawal_id).all()
+        for my_withdrawal in withdrawals_in_table:
+            registered_withdrawals.append(my_withdrawal.whitdrawal_id)
         pending_whitdrawals = []
         user_whitdrawals = pls_validator_withdrawals.query.filter_by(address=wallet).all()
         for user_whitdrawal_data in user_whitdrawals:
