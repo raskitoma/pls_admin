@@ -984,13 +984,10 @@ class ModelShareHeaders(sqla.ModelView):
                     flash(f'SEQUENCE [{sequence_txt}] - Error creating share detail for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
                     break
                 total_registered += 1
-                
-            once all transactions are done
             try:
                 pls_share.new_header(sequence_idx, pls_wallet_payer.address, total_witdrawed, total_shared, priceUSD, priceFX)
             except Exception as e:
-                flash(f'SEQUENCE [{sequence_txt}] - Error creating share header for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
-                
+                flash(f'SEQUENCE [{sequence_txt}] - Error creating share header for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')                
             log2store = LOG_CREATE % (login.current_user.email, form.data)
             logger.info(log2store)
             new_log(users_id=login.current_user.id, module=self.name, severity=SEV_INF, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_CREATE}', data=log2store, image=None)
