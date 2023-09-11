@@ -67,22 +67,25 @@ def app_settings():
     
 def register_error_handlers(app):
 
-    @app.errorhandler(500)
-    def base_error_handler(e):
-        return render_template('500.html'), 500
-
     @app.errorhandler(404)
     def error_404_handler(e):
-        return render_template('404.html'), 404
+        return render_template('404.html', error=e), 404
 
     @app.errorhandler(401)
     def error_404_handler(e):
-        return render_template('401.html'), 401
+        return render_template('401.html', error=e), 401
     
     @app.errorhandler(403)
     def error_403_handler(e):
-        return render_template('403.html'), 403
+        return render_template('403.html', error=e), 403
     
+    @app.errorhandler(405)
+    def base_error_handler(e):
+        return render_template('405.html', error=e), 405
+
+    @app.errorhandler(500)
+    def base_error_handler(e):
+        return render_template('500.html', error=e), 500
     
 def get_timestamp():
     '''
