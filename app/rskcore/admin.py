@@ -957,6 +957,9 @@ class ModelShareHeaders(sqla.ModelView):
         pls_wallet_payer = form.data['pls_wallet_payer']
         pls_wallet_address = pls_wallet_payer.address
         pls_share_sequence = pls_share_seq.new_sequence(pls_wallet_address, rand_string(6))
+        if pls_share_sequence is None:
+            flash(f'Error creating sequence for {pls_wallet_payer.address} {pls_wallet_payer.owner}', 'error')
+            return self.session.query(self.model)
         last_pls_price = pls_price.get_last()
         priceUSD, priceFX = last_pls_price.priceUSD, last_pls_price.priceFX
         
