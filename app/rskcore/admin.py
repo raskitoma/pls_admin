@@ -984,18 +984,18 @@ class ModelShareHeaders(sqla.ModelView):
                 try:
                     pls_share_details.new_detail(sequence_idx, pls_wallet_payer.address, withdrawal_id, validatorIndex, blockNumber, timeStamp, withdrawed_amount, SHARE_PCT, share_amount)
                 except Exception as e:
-                    flash(f'SEQUENCE [{sequence_txt}] - Error creating share detail for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
+                    flash(f'SEQUENCE [{pls_share_sequence.pls_sequence}] - Error creating share detail for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')
                     break
                 total_registered += 1
             try:
-                pls_share.new_header(sequence_idx, pls_wallet_payer.address, total_witdrawed, total_shared, priceUSD, priceFX)
+                pls_share.new_header(pls_share_sequence.index, pls_wallet_payer.address, total_witdrawed, total_shared, priceUSD, priceFX)
             except Exception as e:
-                flash(f'SEQUENCE [{sequence_txt}] - Error creating share header for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')                
+                flash(f'SEQUENCE [{pls_share_sequence.pls_sequence}] - Error creating share header for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {e}', 'error')                
             log2store = LOG_CREATE % (login.current_user.email, form.data)
             logger.info(log2store)
             new_log(users_id=login.current_user.id, module=self.name, severity=SEV_INF, description=f'{__name__} | {self.category}-{self.name}: {LOG_ACT_CREATE}', data=log2store, image=None)
             flash(f'{SHARE_PCT} for address {pls_wallet_payer.address} owned by {pls_wallet_payer.owner} had {len(pls_pending_transactions)} pending transactions.', 'warning')
-            flash(f'SEQUENCE [{sequence_txt}] - {total_registered} transactions registered for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {total_witdrawed} PLS withdrawn - {total_shared} PLS shared', 'success')
+            flash(f'SEQUENCE [{pls_share_sequence.pls_sequence}] - {total_registered} transactions registered for {pls_wallet_payer.address} {pls_wallet_payer.owner} - {total_witdrawed} PLS withdrawn - {total_shared} PLS shared', 'success')
 
         else:
             flash(f'No pending transactions for {pls_wallet_payer.address} {pls_wallet_payer.owner}', 'error')
