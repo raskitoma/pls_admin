@@ -14,6 +14,11 @@ services:
     # it's required if you setup a proxy reverse like nginx or connection to a DB inside the same machine
     # networks:
     #   master_network: # this is the network name
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
 
   plsworker:
     build: .
@@ -28,6 +33,11 @@ services:
     depends_on: 
       - redis
       - adminpls
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
 
   plsbeat:
     build: .
@@ -42,6 +52,11 @@ services:
     depends_on: 
       - redis
       - adminpls
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
 
   redis:
     image: redis:latest
@@ -52,6 +67,11 @@ services:
       - 6379:6379
 #    networks:
 #      - master_network
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"
 
 # setup other packages/services like db, proxy reverse, etc.
 # setup network if required look at the "networks" section above
