@@ -39,7 +39,6 @@ RUN pip3 install -r requirements.txt
 # 
 # copying required files
 COPY entrypoint.sh /app/
-COPY pls_worker.sh /app/
 COPY *.py /app/
 COPY app /app/app
 COPY config /app/config
@@ -47,11 +46,10 @@ COPY scheduler /app/scheduler
 
 # setting permissions to entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
-RUN chmod +x /app/pls_worker.sh
 
 # Exposing main port
 EXPOSE 5000
 
 # Startup
-CMD ["./entrypoint.sh"]
-# CMD ["sh", "-c", "python3 -m flask run --host 0.0.0.0 --port 5000 & celery -A app.scheduler.celery worker --loglevel=INFO --detach --pidfile='' & celery -A app.scheduler.celery beat --loglevel=INFO --detach --pidfile=''"]
+# CMD ["./entrypoint.sh"]
+CMD ["sh", "-c", "python3 -m flask run --host 0.0.0.0 --port 5000"]
