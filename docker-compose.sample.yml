@@ -24,7 +24,7 @@ services:
     environment:
       - TZ=America/Guayaquil
       - APP_SETTINGS_MODULE=config.prod
-    command: celery -A app.scheduler.celery worker --loglevel=info -E --detach --pidfile=''
+    command: celery -A app.scheduler.celery worker --loglevel=info -E
     depends_on: 
       - redis
       - adminpls
@@ -38,7 +38,7 @@ services:
     environment:
       - TZ=America/Guayaquil
       - APP_SETTINGS_MODULE=config.prod
-    command: celery -A app.scheduler.celery beat --loglevel=info --detach --pidfile=''
+    command: celery -A app.scheduler.celery beat --loglevel=info
     depends_on: 
       - redis
       - adminpls
