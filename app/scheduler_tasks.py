@@ -4,7 +4,7 @@
 # ######################## PLEASE READ ##########################################
 # This is a scheduler for the PLS Grabber
 # Index of file:
-# - Tasks are defined starting line 40
+# - Tasks are defined starting line 63
 # - Tasks are scheduled at the last part, divided by a large comment block
 #   here you can set timings, etc.
 # Task are loaded in the entrypoint.py file by flask
@@ -37,6 +37,15 @@ PLS_PRICE_FX = app.config['PLS_PRICE_FX']
 
 # get price from provider
 def get_price(uri, api_key, fx_param):
+    # lets get the price from the DB, if there is a price in the last 10 minutes, we will reutilize it.
+    last_price = pls_price.get_last()
+    if last_price is not None:
+        if last_price.date > datetime.datetime.now() - datetime.timedelta(minutes=10):
+            price_usd = last_price.priceUSD
+            price_fx = last_price.priceFX
+            prYellow(f'From DB: {get_time()} | PLS Price: {price_usd} USD | {price_fx} FX')
+            return price_usd, price_fx
+    # if we are here, we need to get the price from the API
     headers = {'X-CMC_PRO_API_KEY': api_key}
     parameters = {'convert': fx_param}
     try:
@@ -44,6 +53,7 @@ def get_price(uri, api_key, fx_param):
         response2 = requests.get(uri, headers=headers, params=parameters)
         data1 = json.loads(response1.text)
         data2 = json.loads(response2.text)
+        prYellow('Got price from API: Processing data')
     except Exception as e:
         log2store = f"{get_time()} | Error getting data from price API: {str(e)}"
         prRed(f'{get_time()} | {log2store}')
@@ -53,6 +63,7 @@ def get_price(uri, api_key, fx_param):
     try:
         price_usd = float(data1['data']['11145']['quote']['USD']['price'])
         price_fx = float(data2['data']['11145']['quote'][fx_param]['price'])
+        prYellow(f'Price from API: {get_time()} | PLS Price: {price_usd} USD | {price_fx} FX')
     except Exception as e:
         log2store = f"{get_time()} | Error getting price from API: {str(e)}"
         prRed(f'{get_time()} | {log2store}')
@@ -73,6 +84,7 @@ def pls_price_update():
     # get PLS price
     try:
         price_usd, price_fx = get_price(PLS_PRICE_URI, PLS_PRICE_API_KEY, PLS_PRICE_FX)
+        prYellow(f'{get_time()} | PLS Price: {price_usd} USD | {price_fx} FX')
     except Exception as e:
         log2store = f"{get_time()} | Error getting data from price API: {str(e)}"
         prRed(f'{get_time()} | {log2store}')
@@ -99,13 +111,13 @@ def wallets_review():
     pls_wallets_list = pls_wallets.query.all()
     price_usd, price_fx = get_price(PLS_PRICE_URI, PLS_PRICE_API_KEY, PLS_PRICE_FX)
     for wallet in pls_wallets_list:
-        wallet_data_uri = f'https://scan.pulsechain.com/api?module=account&action=balance&address={wallet.address}'
+        wallet_data_uri = f'https://api.scan.pulsechain.com/api/v2/addresses/{wallet.address}'
         wallet_data = requests.get(wallet_data_uri)
         if wallet_data.status_code == 200:
             wallet_info = wallet_data.json()
-            if wallet_info['status'] == '1':
+            if wallet_info['has_tokens']:
                 # save new value for history purposes
-                current_balance = wallet_info['result']
+                current_balance = wallet_info['coin_balance']
                 previous_balance = pls_wallets.get_balance(wallet.address)
                 if float(current_balance) != previous_balance:
                     if float(current_balance) > previous_balance:

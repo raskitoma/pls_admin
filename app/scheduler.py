@@ -90,6 +90,7 @@ def make_celery(app):
 
 celery = make_celery(app)
 
+# #############################################################################################
 # @celery.on_after_configure.connect
 # Gets all enabled tasks an load them into Celery
 def setup_periodic_tasks(sender, **kwargs):    
