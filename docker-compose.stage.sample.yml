@@ -16,6 +16,20 @@ services:
     # networks:
     #   master_network: # this is the network name
 
+  plsworker:
+    build: .
+    image: adminpls:v1
+    container_name: plsworker
+    hostname: plsworker
+    restart: always
+    environment:
+      - TZ=America/Guayaquil
+      - APP_SETTINGS_MODULE=config.prod
+    entrypoint: ./pls_worker.sh
+    depends_on: 
+      - redis
+      - adminpls
+
   redis:
     image: redis:latest
     container_name: redis

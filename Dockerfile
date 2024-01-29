@@ -39,6 +39,7 @@ RUN pip3 install -r requirements.txt
 # 
 # copying required files
 COPY entrypoint.sh /app/
+COPY pls_worker.sh /app/
 COPY *.py /app/
 COPY app /app/app
 COPY config /app/config
@@ -46,6 +47,7 @@ COPY scheduler /app/scheduler
 
 # setting permissions to entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/pls_worker.sh
 
 # Exposing main port
 EXPOSE 5000
