@@ -174,7 +174,7 @@ Once you're done with the first sync operation, you have to enable all the tasks
 If you forgot your admin password, just run:
 
 ```bash
-docker exec -it ppmcore adminpls -m flask update-admin
+docker exec -it adminpls -m flask update-admin
 ```
 
 > Follow the prompts and confirmation for new password.
@@ -204,7 +204,7 @@ For core upgrades, you can run:
 
 ### DB Model changes
 
-Every other update could require model changes. If you have not initialized the database, run the following command `docker exec -it ppmcore python3 -m flask db init`, otherwise run:
+Every other update could require model changes. If you have not initialized the database, run the following command `docker exec -it adminpls python3 -m flask db init`, otherwise run:
 
 ```bash
 docker exec -it adminpls python3 -m flask db migrate
