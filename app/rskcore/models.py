@@ -345,6 +345,8 @@ class master_config(db.Model):
         db.session.commit()
         #return wallet
 
+#testing a change on the "testing" branch, this change should not appear in the "master-raskitoma" branch
+
 class pls_wallets(db.Model):
     '''
     wallets Table
