@@ -18,7 +18,7 @@ import datetime
 from app import db
 from .rskcore.models import task_scheduler
 from .rskcore.utl import new_log
-from .scheduler_tasks import pls_price_update, wallets_review, validator_update
+from .scheduler_tasks import pls_price_update, wallets_review, validator_update, test_task
 
 # setup logger
 logger = get_task_logger(__name__)
@@ -109,6 +109,20 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.conf.update(
         beat_schedule=loaded_tasks
     )
+
+# test task
+@celery.task(name='pls_test', bind=True, rate_limit='1/m')
+def pls_test(self):
+    # clean uploads folder
+    logger.info('Test task - Started')
+    with_errors = ''
+    try:
+        test_task()
+    except Exception as e:
+        logger.error('Failed to run test task. Reason: %s' % (e))
+        with_errors = ' - With errors, check logs'
+    update_task_last_run('pls_test')
+    logger.info(f'Test task Done{with_errors}')
 
 # PLS Price update
 @celery.task(name='pls_pu', bind=True, rate_limit='1/m')

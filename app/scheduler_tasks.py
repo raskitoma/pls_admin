@@ -27,7 +27,8 @@ app = create_app(settings_module)
 from app import db
 from app.rskcore.models import pls_wallets, \
     pls_price, pls_block_explorer, \
-    pls_wallet_history, pls_validator_withdrawals
+    pls_wallet_history, pls_validator_withdrawals, \
+    master_config
 
 # setting up configvars
 REWARD_BASE_PCT = app.config['REWARD_BASE_PCT']
@@ -74,6 +75,15 @@ def get_price(uri, api_key, fx_param):
 # ###############################################################################
 # setting up tasks
 # ###############################################################################
+
+# Test task
+def test_task():
+#    print('Test task, should print out on screen as per the set schedule')
+    bs_low = master_config.get_one_by_name("bs_low_limit").configvalue
+    print(f'The buy and sell low limit is {bs_low}')
+    bs_write_test_value = 25.7654321
+    master_config.update_var("bs_code_write_test", bs_write_test_value)
+
 
 # Gets PLS Price from source
 def pls_price_update():
