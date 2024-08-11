@@ -14,6 +14,8 @@ services:
     # it's required if you setup a proxy reverse like nginx or connection to a DB inside the same machine
     # networks:
     #   master_network: # this is the network name
+    volumes:
+      - /home/username/Dev/pls_admin/migrations:/app/migrations:rw
     logging:
       driver: "json-file"
       options:
