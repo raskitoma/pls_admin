@@ -345,7 +345,25 @@ class master_config(db.Model):
         db.session.commit()
         #return wallet
 
-#testing a change on the "testing" branch, this change should not appear in the "master-raskitoma" branch
+class balance_logs(db.Model):
+    '''
+    wallets Table
+    '''
+    __tablename__ = 'balance_logs'
+    address = db.Column('address', db.String(100), primary_key = True)
+    owner = db.Column('owner', db.String(100), nullable = False)
+    balance = db.Column('balance', db.Float, default=0, nullable = True)
+    units = db.Column('units', db.String(10), default='PLS', nullable = True)
+    
+    def __init__(self, address, owner, balance, units):
+        self.address = address
+        self.owner = owner
+        self.balance = balance
+        self.units = units
+    
+    def __repr__(self):
+        return f'{self.address} - {self.owner} - {self.balance} - {self.units}'
+    
 
 class pls_wallets(db.Model):
     '''
