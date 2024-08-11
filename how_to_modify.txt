@@ -6,21 +6,11 @@
 6. Run "sudo docker container prune" -->> this is not needed as "sudo docker compose down" removes images running in containers.
 7. Run "sudo docker compose up -d" --> this will start up the required images in a detached manner.
 8. Run "sudo docker compose logs -f" --> this will show the logs of the containers; ctrl-c to stop the logging. Same command to restart the logging.
-9. Run "sudo docker exec -it adminpls python3 -m flask scheduler" --> this is not needed for the celery version - the version on this branch.
-10. Any additions to the database models (table additions) are accomplished by modifying the models.py file. These tables will automatically be added 
-to the postgres database when stopping/starting the containers following steps 1 to 10 above). For this operation (adding of table defintiions to models.py), 
+9. Any additions to the database models (table additions) are accomplished by modifying the models.py file. These tables will automatically be added 
+to the postgres database when stopping/starting the containers following steps 1 to 8 above). For this operation (adding of table defintiions to models.py), 
 there is no need to run the following commands.
-```bash
-docker exec -it adminpls python3 -m flask db migrate
-```
+"sudo docker exec -it adminpls python3 -m flask db migrate"
 followed by the
-```bash
-docker exec -it adminpls python3 -m flask db upgrade
-```
-11. The above commmands are only required when deleting table defintions from models.py. When they are run, the postgres database will be updated to
+"sudo docker exec -it adminpls python3 -m flask db upgrade"
+10. The above commmands are only required when deleting table defintions from models.py. When they are run, the postgres database will be updated to
 reflect the deletions made in the models.py file.
-
-
-Note: also need to add the following to the crontab of the machine running the scheduler. --> this is also not required.
-*/7 * * * * /home/terry/pls_admin/pls_admin_sched_check.sh ---> which means this is not required.
-
