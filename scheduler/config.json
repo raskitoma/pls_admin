@@ -1,5 +1,6 @@
 [
     { "task_name" : "pls_pu", "task_description" : "Grabs Prices from API", "task_type":"API Grab"},
     { "task_name" : "pls_vu", "task_description" : "Searchs transactions to get latest validator data", "task_type":"Data Update"},
-    { "task_name" : "pls_wr", "task_description" : "Gets lastest Wallet balance", "task_type":"Data Update"}
+    { "task_name" : "pls_wr", "task_description" : "Gets lastest Wallet balance", "task_type":"Data Update"},
+    { "task_name" : "pls_test", "task_description" : "Prints message to screen for test purposes", "task_type":"Nice test"}
 ]

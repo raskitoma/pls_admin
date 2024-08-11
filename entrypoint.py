@@ -4,6 +4,7 @@
 import json
 import os
 from werkzeug.security import generate_password_hash
+from sqlalchemy import text
 
 from app import create_app
 from app.rskcore.utl import get_time, prGreen, prRed, prYellow
@@ -109,8 +110,12 @@ def scheduler_reset():
         exit()
     lets_proceed = click.confirm('Are you sure you want to initialize the schedule?', abort=True)
     if lets_proceed:
-        db.session.execute('TRUNCATE TABLE task_scheduler CASCADE')
-        db.session.execute('TRUNCATE TABLE task_list CASCADE')
+        t = text("TRUNCATE TABLE task_scheduler CASCADE")
+        db.session.execute(t)
+        #db.session.execute('TRUNCATE TABLE task_scheduler CASCADE')
+        t = text("TRUNCATE TABLE task_list CASCADE")
+        db.session.execute(t)
+        #db.session.execute('TRUNCATE TABLE task_list CASCADE')
         schedules_data = json.load(open('scheduler/config.json'))
         for scheduler_task in schedules_data:
             new_task = task_list(

@@ -17,6 +17,8 @@ RSK Core is a core app to control multiple stuff. Includes default web app and a
 
 In config folder, copy `prod.sample.py` as `prod.py` and set `SQLALCHEMY_DATABASE_URI` and `SECRET_KEY` values.
 
+In project's root folder (eg. /home/username/Dev/pls_admin) make the directory called `migrations`. This is needed for managing future database model changes discussed below.
+
 Also set the following variables:
 
 ### Values for PLS Grabber
@@ -35,7 +37,7 @@ Also set the following variables:
 - **CELERY_TASK_RESULT_EXPIRES**: Timeout for Celery tasks, default `30`.
 - **CELERY_TIMEZONE**: This is the timezone for the scheduler, default is the same as the App or `APP_TIMEZONE`.
 
-Also set a correct `docker-compose.yml` file, you can use(copy) `docker-compose.sample.yml`.  Set `TZ` to your current server's timezone, `APP_SETTINGS_MODULE` as `config.prod`.
+Also set a correct `docker-compose.yml` file, you can use(copy) `docker-compose.sample.yml`.  Set `TZ` to your current server's timezone, `APP_SETTINGS_MODULE` as `config.prod`. It is also necessary to include a `volumes` directive, with an example of the syntax required for this directive shown in the `docker-compose.sample.yml` file.
 
 ### Network configuration
 
@@ -174,7 +176,7 @@ Once you're done with the first sync operation, you have to enable all the tasks
 If you forgot your admin password, just run:
 
 ```bash
-docker exec -it ppmcore adminpls -m flask update-admin
+docker exec -it adminpls -m flask update-admin
 ```
 
 > Follow the prompts and confirmation for new password.
@@ -204,7 +206,7 @@ For core upgrades, you can run:
 
 ### DB Model changes
 
-Every other update could require model changes. If you have not initialized the database, run the following command `docker exec -it ppmcore python3 -m flask db init`, otherwise run:
+Every other update could require model changes. If you have not initialized the database, run the following command `docker exec -it adminpls python3 -m flask db init`, otherwise run:
 
 ```bash
 docker exec -it adminpls python3 -m flask db migrate

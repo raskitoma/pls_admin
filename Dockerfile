@@ -28,6 +28,7 @@ RUN mkdir -p /app/config
 RUN mkdir -p /app/app/rskcore
 RUN mkdir -p /app/app/templates
 RUN mkdir -p /app/scheduler
+RUN mkdir -p /app/migrations
 
 # setting workdir
 WORKDIR /app
@@ -43,6 +44,7 @@ COPY *.py /app/
 COPY app /app/app
 COPY config /app/config
 COPY scheduler /app/scheduler
+COPY migrations /app/migrations
 
 # setting permissions to entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

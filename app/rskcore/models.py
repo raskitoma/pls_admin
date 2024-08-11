@@ -338,7 +338,13 @@ class master_config(db.Model):
     def get_all_active():
         return master_config.query.filter_by(configstatus=True).all()
     
-    
+    @staticmethod
+    def update_var(configname, configvalue):
+        var_update = master_config.query.filter_by(configname=configname).first()
+        var_update.configvalue = configvalue
+        db.session.commit()
+        #return wallet
+
 class pls_wallets(db.Model):
     '''
     wallets Table

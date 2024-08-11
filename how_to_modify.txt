@@ -1,0 +1,16 @@
+1. Run "sudo docker compose down"
+2. Run "sudo docker ps" to check docker container running.
+3. No docker container should be running.
+4. Run "sudo docker images" to see which images are installed.
+5. Note the image hash and then run "sudo docker rmi xxx", for each of the images, where xxx is the image id.
+6. Run "sudo docker container prune" -->> this is not needed as "sudo docker compose down" removes images running in containers.
+7. Run "sudo docker compose up -d" --> this will start up the required images in a detached manner.
+8. Run "sudo docker compose logs -f" --> this will show the logs of the containers; ctrl-c to stop the logging. Same command to restart the logging.
+9. Any additions to the database models (table additions) are accomplished by modifying the models.py file. These tables will automatically be added 
+to the postgres database when stopping/starting the containers following steps 1 to 8 above). For this operation (adding of table defintiions to models.py), 
+there is no need to run the following commands.
+"sudo docker exec -it adminpls python3 -m flask db migrate"
+followed by the
+"sudo docker exec -it adminpls python3 -m flask db upgrade"
+10. The above commmands are only required when deleting table defintions from models.py. When they are run, the postgres database will be updated to
+reflect the deletions made in the models.py file.
